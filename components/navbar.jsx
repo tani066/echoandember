@@ -87,6 +87,16 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent side="left" className="bg-background border-r-pink-200">
               <nav className="flex flex-col gap-6 mt-10">
+                <form onSubmit={handleSearch} className="relative">
+                  <Input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-3 pr-8 w-full"
+                  />
+                  <Search className="w-4 h-4 text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </form>
                 <Link href="/" className="text-xl font-medium hover:text-primary transition-colors">
                   Home
                 </Link>
@@ -110,6 +120,15 @@ export function Navbar() {
                 {session?.user?.role === "ADMIN" && (
                   <Link href="/admin" className="text-xl font-medium text-primary hover:text-primary/80 transition-colors">
                     Admin Dashboard
+                  </Link>
+                )}
+                {session ? (
+                  <button onClick={() => signOut()} className="text-xl font-medium text-left hover:text-primary transition-colors">
+                    Log out
+                  </button>
+                ) : (
+                  <Link href="/auth/signin" className="text-xl font-medium hover:text-primary transition-colors">
+                    Sign In
                   </Link>
                 )}
               </nav>
@@ -189,7 +208,7 @@ export function Navbar() {
             </DropdownMenu>
           ) : (
             <Link href="/auth/signin">
-              <Button variant="ghost" size="icon" className="hover:bg-pink-50 hover:text-primary transition-colors hidden sm:flex">
+              <Button variant="ghost" size="icon" className="hover:bg-pink-50 hover:text-primary transition-colors">
                 <User className="h-5 w-5" />
               </Button>
             </Link>
