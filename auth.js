@@ -1,23 +1,14 @@
-
 import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
+import authConfig from "./auth.config"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(prisma),
     session: { strategy: "jwt" },
-    providers: [
-        Google({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        }),
-    ],
-    pages: {
-        signIn: '/auth/signin',
-        error: '/auth/error',
-    },
+    ...authConfig,
     callbacks: {
+        ...authConfig.callbacks,
         async signIn({ user }) {
             try {
                 if (user.email === "tanishk.agrawal2024@nst.rishihood.edu.in") {
@@ -30,20 +21,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 console.error("Error updating user role:", error);
             }
             return true;
-        },
-        async jwt({ token, user, trigger, session }) {
-            if (user) {
-                token.id = user.id
-                token.role = user.role
-            }
-            return token
-        },
-        async session({ session, token }) {
-            if (session.user) {
-                session.user.id = token.id
-                session.user.role = token.role // Pass role to client
-            }
-            return session
         },
     },
 })
