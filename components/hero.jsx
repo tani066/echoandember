@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Sparkles } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 export function Hero() {
     return (
@@ -30,18 +31,18 @@ export function Hero() {
                     >
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-pink-100 shadow-sm mb-4">
                             <Sparkles className="w-4 h-4 text-primary" />
-                            <span className="text-xs font-semibold text-primary uppercase tracking-wider">New Collection 2024</span>
+                            <span className="text-xs font-semibold text-primary uppercase tracking-wider">Handcrafted with Love</span>
                         </div>
 
-                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-tight">
-                            Let's Shop The <br />
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-tight">
+                            Turn Moments into <br />
                             <span className="text-primary relative">
-                                Sparkling
+                                Lasting
                                 <svg className="absolute -bottom-2 w-full left-0 text-accent opacity-50 -z-10 h-6" viewBox="0 0 100 20" preserveAspectRatio="none">
                                     <path d="M0 15 Q 50 25 100 15" stroke="currentColor" strokeWidth="12" fill="none" />
                                 </svg>
                             </span>
-                            <br /> Collection
+                            <br /> Memories
                         </h1>
                     </motion.div>
 
@@ -51,7 +52,7 @@ export function Hero() {
                         transition={{ duration: 0.6, delay: 0.1 }}
                         className="text-lg text-muted-foreground max-w-lg mx-auto md:mx-0"
                     >
-                        Discover our handcrafted bows, tutus, and accessories designed to make every moment magical.
+                        Explore Polaroids, 3D Miniature Boxes, Crochet Blooms & Spotify Music Plaques and much more — cute little gifts filled with big love 💕
                     </motion.p>
 
                     <motion.div
@@ -60,12 +61,16 @@ export function Hero() {
                         transition={{ duration: 0.6, delay: 0.2 }}
                         className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start"
                     >
-                        <Button size="lg" className="rounded-full px-8 text-lg h-12 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
-                            Shop Now
-                        </Button>
-                        <Button size="lg" variant="outline" className="rounded-full px-8 text-lg h-12 border-primary/20 hover:bg-pink-50 text-foreground group">
-                            View Lookbook <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </Button>
+                        <Link href="/shop">
+                            <Button size="lg" className="rounded-full px-8 text-lg h-12 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
+                                Shop Now
+                            </Button>
+                        </Link>
+                        <Link href="/#shop-categories">
+                            <Button size="lg" variant="outline" className="rounded-full px-8 text-lg h-12 border-primary/20 hover:bg-pink-50 text-foreground group">
+                                View Lookbook <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </Button>
+                        </Link>
                     </motion.div>
                 </div>
 
@@ -80,7 +85,7 @@ export function Hero() {
                         {/* Main Image Frame */}
                         <div className="absolute inset-0 bg-white p-4 rounded-3xl shadow-xl transform rotate-3 transition-transform hover:rotate-0 duration-500">
                             <div className="w-full h-full bg-pink-100 rounded-2xl overflow-hidden relative">
-                                
+
                                 <div className="w-full h-full flex items-center justify-center text-primary/40 bg-pink-50">
                                     {/* <span className="text-sm">Product Image</span> */}
                                     <Image src="/image1.jpeg" alt="Product Image" fill className="object-contain" />

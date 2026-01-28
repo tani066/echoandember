@@ -5,6 +5,18 @@ import { ProductCard } from "@/components/product-card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
+
+const CATEGORIES = [
+  { name: 'Gifts', emoji: '🎁', color: 'from-pink-100 to-rose-50' },
+  { name: 'Polaroids', emoji: '📸', color: 'from-purple-100 to-indigo-50' },
+  { name: 'Spotify Music Plaques', emoji: '🎵', color: 'from-blue-100 to-cyan-50' },
+  { name: 'Crochet Blooms', emoji: '🧶', color: 'from-green-100 to-emerald-50' },
+  { name: 'Wallet Cards', emoji: '💳', color: 'from-orange-100 to-amber-50' },
+  { name: '3D Miniatures Box', emoji: '📦', color: 'from-yellow-100 to-orange-50' },
+  { name: 'Gift Box', emoji: '💝', color: 'from-red-100 to-pink-50' },
+  { name: 'Gifts For Him', emoji: '👔', color: 'from-slate-100 to-blue-50' },
+  { name: 'Gifts For Her', emoji: '💄', color: 'from-fuchsia-100 to-pink-50' },
+];
 export default async function Home() {
   const products = await prisma.product.findMany({
     take: 8,
@@ -16,22 +28,40 @@ export default async function Home() {
       <Hero />
 
       {/* Category Section - Floating Cards */}
-      <section className="py-20 bg-white relative overflow-hidden">
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-foreground">Shop by Category</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {['Bows', 'Tutus', 'Crowns', 'Gifts'].map((cat, i) => (
-              <Link href={`/shop?category=${cat}`} key={i} className="group relative aspect-[4/5] rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300">
-                <div className={`absolute inset-0 bg-gradient-to-br ${i === 0 ? 'from-pink-100 to-pink-50' :
-                    i === 1 ? 'from-purple-100 to-purple-50' :
-                      i === 2 ? 'from-yellow-100 to-yellow-50' :
-                        'from-blue-100 to-blue-50'
-                  } opacity-100 transition-transform group-hover:scale-110`} />
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-                  <span className="text-6xl mb-4 group-hover:-translate-y-2 transition-transform duration-300 drop-shadow-sm">
-                    {i === 0 ? '🎀' : i === 1 ? '👗' : i === 2 ? '👑' : '🎁'}
+      <section id="shop-categories" className="py-24 bg-white relative overflow-hidden">
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex flex-col items-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground mb-4">
+              Shop by Category
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl text-center">
+              Find the perfect handcrafted treasure for your loved ones, organized by heart-picked collections.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
+            {CATEGORIES.map((cat, i) => (
+              <Link
+                href={`/shop?category=${cat.name}`}
+                key={i}
+                className="group relative h-64 rounded-3xl overflow-hidden cursor-pointer border border-transparent hover:border-primary/10 transition-all duration-500 hover:-translate-y-2 shadow-sm hover:shadow-2xl"
+              >
+                {/* Background Gradient Layer */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${cat.color} transition-transform duration-700 group-hover:scale-110`} />
+
+                {/* Decorative Circle Background */}
+                <div className="absolute -right-4 -top-4 w-32 h-32 bg-white/20 rounded-full blur-2xl group-hover:bg-white/40 transition-colors" />
+
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
+                  <span className="text-7xl mb-6 transform group-hover:scale-125 transition-transform duration-500 ease-out drop-shadow-md">
+                    {cat.emoji}
                   </span>
-                  <span className="text-xl font-bold text-foreground group-hover:text-primary transition-colors bg-white/50 backdrop-blur-sm px-4 py-1 rounded-full">{cat}</span>
+
+                  <div className="bg-white/70 backdrop-blur-md px-6 py-2.5 rounded-2xl border border-white/50 shadow-sm group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                    <span className="text-base md:text-lg font-bold tracking-wide">
+                      {cat.name}
+                    </span>
+                  </div>
                 </div>
               </Link>
             ))}

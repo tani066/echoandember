@@ -48,7 +48,7 @@
 
 :root {
   --radius: 1rem;
-  
+
   /* Soft Pink Background */
   --background: #FFF5F7;
   /* Dark Brown/Purple text */
@@ -139,9 +139,14 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
