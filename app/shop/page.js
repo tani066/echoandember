@@ -3,6 +3,7 @@ import { Navbar } from "@/components/navbar"
 import { ProductCard } from "@/components/product-card"
 import { Search, SlidersHorizontal, ChevronDown, LayoutGrid } from "lucide-react"
 import Link from "next/link"
+import { CATEGORIES } from "@/lib/constants"
 
 export default async function ShopPage(props) {
     const searchParams = await props.searchParams
@@ -27,7 +28,7 @@ export default async function ShopPage(props) {
 
     const products = await prisma.product.findMany({ where, orderBy })
 
-    const categories = ['Bows', 'Tutus', 'Crowns', 'Gifts']
+    const categoryNames = CATEGORIES.map(c => c.name)
 
     return (
         <main className="min-h-screen bg-[#FDFCFB] text-slate-900 selection:bg-pink-100">
@@ -50,16 +51,16 @@ export default async function ShopPage(props) {
             <div className="container mx-auto px-4 py-6">
                 {/* Mobile-First Controls */}
                 <div className="flex flex-col gap-6 mb-10">
-                    
+
                     {/* Horizontal Scroll Categories - Better for Mobile */}
                     <div className="flex items-center gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 md:justify-center">
-                        <Link 
-                            href={`/shop${q ? `?q=${q}` : ''}`} 
+                        <Link
+                            href={`/shop${q ? `?q=${q}` : ''}`}
                             className={`px-5 py-2 rounded-full text-sm transition-all border whitespace-nowrap active:scale-95 ${!category ? 'bg-slate-900 border-slate-900 text-white shadow-md' : 'bg-white border-slate-200 text-slate-600'}`}
                         >
                             All Treasures
                         </Link>
-                        {['Bows', 'Tutus', 'Crowns', 'Gifts'].map(cat => (
+                        {categoryNames.map(cat => (
                             <Link
                                 key={cat}
                                 href={`/shop?category=${cat}${q ? `&q=${q}` : ''}`}
@@ -83,7 +84,7 @@ export default async function ShopPage(props) {
                                 <span>Sort</span>
                                 <ChevronDown size={14} className="group-hover:rotate-180 transition-transform" />
                             </button>
-                            
+
                             {/* Dropdown Menu */}
                             <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-100 shadow-xl rounded-xl py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all md:block hidden">
                                 <Link href={`/shop?${new URLSearchParams({ ...searchParams, sort: 'newest' })}`} className="block px-4 py-2 text-sm hover:bg-slate-50">Newest</Link>
@@ -98,7 +99,7 @@ export default async function ShopPage(props) {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-8 md:gap-y-12">
                     {products.map((product) => (
                         <div key={product.id} className="flex flex-col group">
-                           <ProductCard
+                            <ProductCard
                                 id={product.id}
                                 title={product.title}
                                 price={product.price}

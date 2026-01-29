@@ -11,6 +11,7 @@ import Image from "next/image"
 import { addProduct, updateProduct } from "@/app/actions"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { CATEGORIES } from "@/lib/constants"
 
 export function ProductForm({ product }) {
     const router = useRouter()
@@ -167,12 +168,11 @@ export function ProductForm({ product }) {
                                     required
                                 >
                                     <option value="">Select Category</option>
-                                    <option value="Bows">Bows</option>
-                                    <option value="Tutus">Tutus</option>
-                                    <option value="Crowns">Crowns</option>
-                                    <option value="Apparel">Apparel</option>
-                                    <option value="Accessories">Accessories</option>
-                                    <option value="Gifts">Gifts</option>
+                                    {CATEGORIES.map((cat) => (
+                                        <option key={cat.name} value={cat.name}>
+                                            {cat.name}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                         </CardContent>
