@@ -10,7 +10,7 @@ export function Footer() {
                     <div className="space-y-4">
                         <h3 className="text-2xl font-bold text-primary">Echo & Ember</h3>
                         <p className="text-muted-foreground text-sm leading-relaxed">
-                            Handcrafted bows, tutus, and accessories designed to add a touch of magic to every moment.
+                            From Polaroids to 3D miniatures - Gifts filled with love and memories ❤️
                         </p>
                     </div>
 
@@ -18,9 +18,9 @@ export function Footer() {
                     <div className="space-y-4">
                         <h4 className="font-semibold text-foreground">Shop</h4>
                         <ul className="space-y-2 text-sm text-muted-foreground">
-                            <li><Link href="/shop?category=Bows" className="hover:text-primary transition-colors">Bows</Link></li>
-                            <li><Link href="/shop?category=Tutus" className="hover:text-primary transition-colors">Tutus</Link></li>
-                            <li><Link href="/shop?category=Crowns" className="hover:text-primary transition-colors">Crowns</Link></li>
+                            <li><Link href="/shop?category=Gifts" className="hover:text-primary transition-colors">Gifts</Link></li>
+                            <li><Link href="/shop?category=Polaroids" className="hover:text-primary transition-colors">Polaroids</Link></li>
+                            <li><Link href="/shop?category=Spotify Music Plaques" className="hover:text-primary transition-colors">Spotify Music Plaques</Link></li>
                             <li><Link href="/shop" className="hover:text-primary transition-colors">All Products</Link></li>
                         </ul>
                     </div>
@@ -45,9 +45,6 @@ export function Footer() {
                             </a>
                             <a href="#" className="w-10 h-10 rounded-full bg-pink-50 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
                                 <Facebook className="w-5 h-5" />
-                            </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-pink-50 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
-                                <Twitter className="w-5 h-5" />
                             </a>
                         </div>
                     </div>

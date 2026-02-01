@@ -101,14 +101,14 @@ export default async function Home() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div className="p-8 rounded-2xl bg-pink-50/50 hover:bg-pink-50 transition-colors">
-              <div className="text-4xl mb-4">✨</div>
+              <div className="text-4xl mb-4">🫶🏻</div>
               <h3 className="text-xl font-bold mb-2">Handcrafted with Love</h3>
-              <p className="text-muted-foreground">Every stitch and sparkle is added by hand to ensure unique quality.</p>
+              <p className="text-muted-foreground">Made slowly, with attention and soul.</p>
             </div>
             <div className="p-8 rounded-2xl bg-purple-50/50 hover:bg-purple-50 transition-colors">
-              <div className="text-4xl mb-4">🦄</div>
-              <h3 className="text-xl font-bold mb-2">Unique Designs</h3>
-              <p className="text-muted-foreground">Whimsical styles you won't find anywhere else, perfect for your little one.</p>
+              <div className="text-4xl mb-4">✨</div>
+              <h3 className="text-xl font-bold mb-2">Personalised Magic </h3>
+              <p className="text-muted-foreground">A little you, in every gift.</p>
             </div>
             <div className="p-8 rounded-2xl bg-yellow-50/50 hover:bg-yellow-50 transition-colors">
               <div className="text-4xl mb-4">💝</div>

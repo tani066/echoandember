@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Sparkles } from "lucide-react"
+import { ArrowRight, Sparkles , Camera} from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -30,7 +30,8 @@ export function Hero() {
                         transition={{ duration: 0.6 }}
                     >
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-pink-100 shadow-sm mb-4">
-                            <Sparkles className="w-4 h-4 text-primary" />
+                            {/* <Sparkles className="w-4 h-4 text-primary" /> */}
+                            🫶🏻
                             <span className="text-xs font-semibold text-primary uppercase tracking-wider">Handcrafted with Love</span>
                         </div>
 
@@ -88,7 +89,7 @@ export function Hero() {
 
                                 <div className="w-full h-full flex items-center justify-center text-primary/40 bg-pink-50">
                                     {/* <span className="text-sm">Product Image</span> */}
-                                    <Image src="/image1.jpeg" alt="Product Image" fill className="object-contain" />
+                                    <Image src="/image2.jpeg" alt="Product Image" fill className="object-cover" />
                                 </div>
                             </div>
                         </div>
@@ -101,11 +102,11 @@ export function Hero() {
                         >
                             <div className="flex items-center gap-3">
                                 <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center">
-                                    <Sparkles className="w-6 h-6 text-primary" />
+                                    <Camera className="w-6 h-6 text-primary"/>
                                 </div>
                                 <div>
-                                    <p className="text-sm font-bold text-foreground">Sparkle Bow</p>
-                                    <p className="text-xs text-muted-foreground">$12.00</p>
+                                    <p className="text-sm font-bold text-foreground">Polaroids</p>
+                                    <p className="text-xs text-muted-foreground">₹ 500</p>
                                 </div>
                             </div>
                         </motion.div>

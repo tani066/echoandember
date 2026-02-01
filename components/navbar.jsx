@@ -139,7 +139,7 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
           <div className="relative">
-            <Sparkles className="h-6 w-6 text-primary group-hover:rotate-12 transition-transform duration-300" />
+            {/* <Sparkles className="h-6 w-6 text-primary group-hover:rotate-12 transition-transform duration-300" /> */}
           </div>
           <span className="text-2xl font-bold tracking-tight text-foreground font-serif">
             Echo<span className="text-primary">&</span>Ember
