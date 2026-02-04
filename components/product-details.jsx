@@ -19,19 +19,12 @@ export function ProductDetails({ product }) {
     const activeMedia = allMedia[selectedIndex]
 
     // Options Logic
-    const initialOptions = {}
-    if (product.options && Array.isArray(product.options)) {
-        product.options.forEach(opt => {
-            if (opt.values && opt.values.length > 0) {
-                initialOptions[opt.name] = opt.values[0]
-            }
-        })
-    }
-    const [selectedOptions, setSelectedOptions] = useState(initialOptions)
+    const [selectedOptions, setSelectedOptions] = useState({})
 
     const { addToCart } = useCart()
 
     const handleAddToCart = () => {
+        // Validation Removed as per request
         addToCart({
             id: product.id,
             title: product.title,
@@ -152,7 +145,16 @@ export function ProductDetails({ product }) {
                                         return (
                                             <button
                                                 key={val}
-                                                onClick={() => setSelectedOptions(prev => ({ ...prev, [option.name]: val }))}
+                                                onClick={() => setSelectedOptions(prev => {
+                                                    const isSelected = prev[option.name] === val
+                                                    const newOptions = { ...prev }
+                                                    if (isSelected) {
+                                                        delete newOptions[option.name]
+                                                    } else {
+                                                        newOptions[option.name] = val
+                                                    }
+                                                    return newOptions
+                                                })}
                                                 className={cn(
                                                     "px-4 py-2 rounded-lg text-sm font-medium transition-all border-2",
                                                     isSelected

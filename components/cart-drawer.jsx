@@ -44,7 +44,7 @@ export function CartDrawer() {
                 ) : (
                     <div className="flex-1 overflow-y-auto py-6 -mx-6 px-6 space-y-6">
                         {items.map((item) => (
-                            <div key={item.id} className="flex gap-4">
+                            <div key={item.cartId} className="flex gap-4">
                                 <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-pink-100 bg-pink-50 flex-shrink-0">
                                     <Image src={item.image} alt={item.title} fill className="object-cover" />
                                 </div>
@@ -53,9 +53,19 @@ export function CartDrawer() {
                                         <div>
                                             <h4 className="font-semibold text-foreground line-clamp-1">{item.title}</h4>
                                             <p className="text-xs text-muted-foreground">{item.category}</p>
+                                            {/* Display Options */}
+                                            {item.options && Object.keys(item.options).length > 0 && (
+                                                <div className="flex flex-wrap gap-1 mt-1">
+                                                    {Object.entries(item.options).map(([key, val]) => (
+                                                        <span key={key} className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-500">
+                                                            {key}: {val}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
                                         <button
-                                            onClick={() => removeFromCart(item.id)}
+                                            onClick={() => removeFromCart(item.cartId)}
                                             className="text-muted-foreground hover:text-red-400 transition-colors"
                                         >
                                             <X className="w-4 h-4" />
@@ -66,14 +76,14 @@ export function CartDrawer() {
                                         <div className="flex items-center gap-3 bg-gray-50 rounded-full px-2 py-1">
                                             <button
                                                 className="w-6 h-6 rounded-full flex items-center justify-center bg-white shadow hover:bg-gray-100 text-xs"
-                                                onClick={() => updateQuantity(item.id, -1)}
+                                                onClick={() => updateQuantity(item.cartId, -1)}
                                             >
                                                 <Minus className="w-3 h-3" />
                                             </button>
                                             <span className="text-sm font-medium w-4 text-center">{item.quantity}</span>
                                             <button
                                                 className="w-6 h-6 rounded-full flex items-center justify-center bg-white shadow hover:bg-gray-100 text-xs"
-                                                onClick={() => updateQuantity(item.id, 1)}
+                                                onClick={() => updateQuantity(item.cartId, 1)}
                                             >
                                                 <Plus className="w-3 h-3" />
                                             </button>

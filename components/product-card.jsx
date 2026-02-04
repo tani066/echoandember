@@ -1,6 +1,6 @@
 "use client"
 
-import { Heart, ShoppingCart, Sparkles, Plus } from "lucide-react"
+import { Heart, ShoppingBag, Sparkles, Plus, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
@@ -70,25 +70,27 @@ export function ProductCard({
                     />
                 </Link>
 
-                {/* Hover Quick Add (Desktop) */}
+                {/* Hover Quick View (Desktop) */}
                 <div className="absolute inset-0 z-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none md:pointer-events-auto hidden md:flex">
-                    <Button
-                        onClick={handleAddToCart}
-                        className="bg-white/90 backdrop-blur-xl text-slate-900 border-none px-6 py-6 rounded-2xl font-bold shadow-2xl hover:bg-white hover:scale-105 transition-all flex items-center gap-2"
-                    >
-                        <ShoppingCart className="w-4 h-4" />
-                        Quick Add to Cart
-                    </Button>
+                    <Link href={`/products/${id}`}>
+                        <Button
+                            className="bg-white/90 backdrop-blur-xl text-slate-900 border-none px-6 py-6 rounded-2xl font-bold shadow-2xl hover:bg-white hover:scale-105 transition-all flex items-center gap-2"
+                        >
+                            <ShoppingCart className="w-4 h-4" />
+                            View Options
+                        </Button>
+                    </Link>
                 </div>
 
                 {/* Mobile FAB (Permanent) */}
                 <div className="absolute bottom-4 right-4 z-30 md:hidden">
-                    <button
-                        onClick={handleAddToCart}
-                        className="h-12 w-12 rounded-full bg-white shadow-xl flex items-center justify-center active:scale-90 transition-transform text-slate-900 border border-slate-100"
-                    >
-                        <Plus className="h-6 w-6" />
-                    </button>
+                    <Link href={`/products/${id}`}>
+                        <button
+                            className="h-12 w-12 rounded-full bg-white shadow-xl flex items-center justify-center active:scale-90 transition-transform text-slate-900 border border-slate-100"
+                        >
+                            <ShoppingBag className="h-6 w-6" />
+                        </button>
+                    </Link>
                 </div>
             </div>
 

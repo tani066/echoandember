@@ -131,9 +131,21 @@ export default function CheckoutPage() {
 
             <CardContent className="space-y-4">
               {items.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm">
-                  <span>{item.quantity}× {item.title}</span>
-                  <span>₹{(item.price * item.quantity).toFixed(2)}</span>
+                <div key={item.cartId} className="flex flex-col text-sm border-b border-dashed border-gray-100 pb-3 last:border-0 last:pb-0">
+                  <div className="flex justify-between font-medium">
+                    <span>{item.quantity}× {item.title}</span>
+                    <span>₹{(item.price * item.quantity).toFixed(2)}</span>
+                  </div>
+                  {/* Display Options */}
+                  {item.options && Object.keys(item.options).length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {Object.entries(item.options).map(([key, val]) => (
+                        <span key={key} className="text-[10px] text-muted-foreground">
+                          {key}: {val}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
 

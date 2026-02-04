@@ -150,6 +150,16 @@ export default async function AdminOrderDetailPage({ params }) {
                                     <TableCell>
                                         <div className="font-medium">{item.product?.title || "Unknown Product"}</div>
                                         <div className="text-xs text-muted-foreground">ID: {item.productId}</div>
+                                        {/* Display Options */}
+                                        {item.options && typeof item.options === 'object' && Object.keys(item.options).length > 0 && (
+                                            <div className="flex flex-wrap gap-1 mt-1">
+                                                {Object.entries(item.options).map(([key, val]) => (
+                                                    <Badge key={key} variant="outline" className="text-[10px] px-1.5 py-0 h-5">
+                                                        {key}: {val}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        )}
                                     </TableCell>
                                     <TableCell className="text-right">₹{item.price.toFixed(2)}</TableCell>
                                     <TableCell className="text-right">{item.quantity}</TableCell>

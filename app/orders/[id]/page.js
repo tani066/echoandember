@@ -147,6 +147,16 @@ export default async function OrderDetailPage({ params }) {
                                             <div>
                                                 <h4 className="font-semibold">{item.product?.title || "Product"}</h4>
                                                 <p className="text-sm text-muted-foreground">{item.product?.category}</p>
+                                                {/* Display Options */}
+                                                {item.options && typeof item.options === 'object' && Object.keys(item.options).length > 0 && (
+                                                    <div className="flex flex-wrap gap-1 mt-1 mb-1">
+                                                        {Object.entries(item.options).map(([key, val]) => (
+                                                            <span key={key} className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-500 mr-1">
+                                                                {key}: {val}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
                                                 <p className="text-sm mt-1">Qty: {item.quantity}</p>
                                             </div>
                                         </div>

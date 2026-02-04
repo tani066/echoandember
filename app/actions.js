@@ -248,11 +248,23 @@ export async function createOrder(items, shippingDetails) {
     for (const item of items) {
         const product = await prisma.product.findUnique({ where: { id: item.id } })
         if (product) {
+            // Check stock (Optional but good)
+            // if (product.stock < item.quantity) {
+            //     throw new Error(`Insufficient stock for ${product.title}`)
+            // }
+
             total += product.price * item.quantity
             orderItemsData.push({
                 productId: item.id,
                 quantity: item.quantity,
                 price: product.price,
+                options: item.options || undefined // Save options
+            })
+
+            // Decrement Stock
+            await prisma.product.update({
+                where: { id: item.id },
+                data: { stock: { decrement: item.quantity } }
             })
         }
     }

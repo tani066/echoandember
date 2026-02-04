@@ -23,27 +23,40 @@ export function CartProvider({ children }) {
 
     const addToCart = (product) => {
         setItems(current => {
-            const existing = current.find(item => item.id === product.id)
+            // Generate unique ID based on product ID and sorted options string
+            // This ensures {Size: "M", Color: "Red"} is same as {Color: "Red", Size: "M"}
+            const optionsString = product.options
+                ? JSON.stringify(Object.keys(product.options).sort().reduce((obj, key) => {
+                    obj[key] = product.options[key];
+                    return obj;
+                }, {}))
+                : "{}"
+
+            const cartId = `${product.id}-${optionsString}`
+
+            const existing = current.find(item => item.cartId === cartId)
+
             if (existing) {
                 return current.map(item =>
-                    item.id === product.id
+                    item.cartId === cartId
                         ? { ...item, quantity: item.quantity + 1 }
                         : item
                 )
             }
-            return [...current, { ...product, quantity: 1 }]
+            // Add new item with cartId
+            return [...current, { ...product, quantity: 1, cartId }]
         })
         setIsOpen(true) // Open cart when adding item
     }
 
-    const removeFromCart = (productId) => {
-        setItems(current => current.filter(item => item.id !== productId))
+    const removeFromCart = (cartId) => {
+        setItems(current => current.filter(item => item.cartId !== cartId))
     }
 
-    const updateQuantity = (productId, delta) => {
+    const updateQuantity = (cartId, delta) => {
         setItems(current =>
             current.map(item => {
-                if (item.id === productId) {
+                if (item.cartId === cartId) {
                     const newQuantity = Math.max(1, item.quantity + delta)
                     return { ...item, quantity: newQuantity }
                 }
