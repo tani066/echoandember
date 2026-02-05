@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
 
+export const dynamic = 'force-dynamic'
+
 async function getAdminStats() {
     const today = new Date()
     const thirtyDaysAgo = new Date(today)
