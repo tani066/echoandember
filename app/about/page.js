@@ -2,6 +2,7 @@ import { Navbar } from "@/components/navbar"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Heart, Sparkles, Users } from "lucide-react"
+import Image from "next/image"
 
 export default function AboutPage() {
     return (
@@ -14,11 +15,10 @@ export default function AboutPage() {
                 <div className="container mx-auto px-4 relative z-10 text-center">
                     <span className="text-primary font-medium tracking-widest text-xs uppercase mb-4 block">Our Story</span>
                     <h1 className="text-4xl md:text-6xl font-bold font-serif text-gray-900 mb-6">
-                        Crafting Joy, <span className="text-primary">One Bow at a Time</span>
+                        Where Little Details , <br /> <span className="text-primary">Hold Big Emotions</span>
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                        Welcome to Echo & Ember, where we believe every little moment deserves a touch of magic.
-                        Our handmade accessories are designed to make your little ones shine.
+                        We believe it’s the little details that carry the biggest emotions. Every idea, every touch, and every moment we create is thoughtfully crafted to tell a story that feels personal, meaningful, and timeless. Because when details are done right, they don’t just look beautiful—they make you feel something.
                     </p>
                 </div>
             </section>
@@ -39,14 +39,14 @@ export default function AboutPage() {
                                 <Sparkles className="w-8 h-8" />
                             </div>
                             <h3 className="text-xl font-bold">Quality First</h3>
-                            <p className="text-muted-foreground">We use only the softest, safest materials for your little ones' delicate skin.</p>
+                            <p className="text-muted-foreground">Crafted with uncompromising quality, so every gift feels truly special.</p>
                         </div>
                         <div className="text-center space-y-4">
                             <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto text-blue-600">
                                 <Users className="w-8 h-8" />
                             </div>
                             <h3 className="text-xl font-bold">Community</h3>
-                            <p className="text-muted-foreground">We are more than a brand; we are a community of parents celebrating childhood.</p>
+                            <p className="text-muted-foreground">We are more than a brand; we are a community creating meaningful gifts that celebrate every single moment.</p>
                         </div>
                     </div>
                 </div>
@@ -57,15 +57,17 @@ export default function AboutPage() {
                 <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
                     <div className="flex-1">
                         {/* Placeholder for an image */}
-                        <div className="aspect-video bg-gray-200 rounded-2xl w-full"></div>
+                        <div className="aspect-video bg-gray-200 rounded-2xl w-full">
+                            <Image src="/about3.jpeg" alt="about"  width={700} height={700}/>   
+                        </div>
                     </div>
                     <div className="flex-1 space-y-6">
                         <h2 className="text-3xl font-bold font-serif">A Note from the Founder</h2>
                         <p className="text-muted-foreground leading-relaxed">
-                            "I started Echo & Ember with a simple dream: to create beautiful, high-quality accessories that I would love to use for my own children. What began as a small passion project has grown into something truly special, thanks to the support of amazing families like yours."
+                            "Echo & Ember was created with a simple vision—to make gifting more meaningful. We believe a great gift is defined by thoughtful design, premium quality, and the emotions it carries. Every product is crafted with attention to detail, ensuring it feels special no matter the occasion or age. Our goal is to create gifts that are timeless, versatile, and truly memorable. Thank you for choosing Echo & Ember to be a part of your special moments."
                         </p>
                         <div>
-                            <p className="font-semibold text-lg">Tanishk Agrawal</p>
+                            <p className="font-semibold text-lg">Pari Agrawal</p>
                             <p className="text-sm text-muted-foreground">Founder & Creator</p>
                         </div>
                     </div>

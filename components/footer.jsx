@@ -32,7 +32,6 @@ export function Footer() {
                             <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
                             <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
                             <li><Link href="/shipping" className="hover:text-primary transition-colors">Shipping & Returns</Link></li>
-                            <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
                         </ul>
                     </div>
 
@@ -52,7 +51,7 @@ export function Footer() {
 
                 <div className="border-t border-pink-50 pt-8 text-center text-sm text-muted-foreground">
                     <p className="flex items-center justify-center gap-1">
-                        © {new Date().getFullYear()} Echo & Ember. Made with <Heart className="w-4 h-4 text-red-400 fill-red-400" /> for little ones.
+                        © {new Date().getFullYear()} Echo & Ember. Made with <Heart className="w-4 h-4 text-red-400 fill-red-400" />
                     </p>
                 </div>
             </div>

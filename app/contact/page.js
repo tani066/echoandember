@@ -37,7 +37,7 @@ export default function ContactPage() {
                                 </div>
                                 <div>
                                     <p className="font-medium">Email</p>
-                                    <p className="text-muted-foreground text-sm">hello@echoandember.com</p>
+                                    <p className="text-muted-foreground text-sm">echo.n.ember26@gmail.com</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
@@ -46,7 +46,7 @@ export default function ContactPage() {
                                 </div>
                                 <div>
                                     <p className="font-medium">Phone</p>
-                                    <p className="text-muted-foreground text-sm">+1 (555) 123-4567</p>
+                                    <p className="text-muted-foreground text-sm">8463050025</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
@@ -67,16 +67,16 @@ export default function ContactPage() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="firstName">First name</Label>
-                                    <Input id="firstName" placeholder="Jane" />
+                                    <Input id="firstName" placeholder="Tanishk" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="lastName">Last name</Label>
-                                    <Input id="lastName" placeholder="Doe" />
+                                    <Input id="lastName" placeholder="Ag" />
                                 </div>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="email">Email</Label>
-                                <Input id="email" type="email" placeholder="jane@example.com" />
+                                <Input id="email" type="email" placeholder="tani@example.com" />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="message">Message</Label>
