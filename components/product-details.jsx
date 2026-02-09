@@ -21,6 +21,22 @@ export function ProductDetails({ product }) {
     // Options Logic
     const [selectedOptions, setSelectedOptions] = useState({})
 
+    // Calculate Price dynamically
+    let currentPrice = product.price
+    if (product.options && Array.isArray(product.options)) {
+        product.options.forEach(opt => {
+            const selectedVal = selectedOptions[opt.name]
+            if (selectedVal) {
+                // Find the value object/string
+                const matchedVal = opt.values.find(v => (typeof v === 'string' ? v : v.label) === selectedVal)
+                // If it's an object with a specific price, use it
+                if (matchedVal && typeof matchedVal === 'object' && matchedVal.price > 0) {
+                    currentPrice = matchedVal.price
+                }
+            }
+        })
+    }
+
     const { addToCart } = useCart()
 
     const handleAddToCart = () => {
@@ -28,7 +44,7 @@ export function ProductDetails({ product }) {
         addToCart({
             id: product.id,
             title: product.title,
-            price: product.price,
+            price: currentPrice,
             image: product.image,
             category: product.category,
             options: selectedOptions
@@ -115,7 +131,7 @@ export function ProductDetails({ product }) {
                     <h1 className="text-4xl md:text-5xl font-bold font-serif text-slate-900 leading-tight">{product.title}</h1>
 
                     <div className="flex items-center gap-4 mt-4">
-                        <span className="text-3xl font-bold text-slate-900">₹{product.price.toFixed(2)}</span>
+                        <span className="text-3xl font-bold text-slate-900">₹{currentPrice.toFixed(2)}</span>
 
                         {/* Rating */}
                         <div className="flex items-center gap-1 text-sm bg-yellow-50 px-2 py-1 rounded-md border border-yellow-100">
@@ -141,17 +157,17 @@ export function ProductDetails({ product }) {
                                 </label>
                                 <div className="flex flex-wrap gap-2">
                                     {option.values.map((val) => {
-                                        const isSelected = selectedOptions[option.name] === val
+                                        const label = typeof val === 'string' ? val : val.label
+                                        const isSelected = selectedOptions[option.name] === label
                                         return (
                                             <button
-                                                key={val}
+                                                key={label}
                                                 onClick={() => setSelectedOptions(prev => {
-                                                    const isSelected = prev[option.name] === val
                                                     const newOptions = { ...prev }
-                                                    if (isSelected) {
+                                                    if (prev[option.name] === label) {
                                                         delete newOptions[option.name]
                                                     } else {
-                                                        newOptions[option.name] = val
+                                                        newOptions[option.name] = label
                                                     }
                                                     return newOptions
                                                 })}
@@ -162,7 +178,10 @@ export function ProductDetails({ product }) {
                                                         : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
                                                 )}
                                             >
-                                                {val}
+                                                {label}
+                                                {typeof val === 'object' && val.price > 0 && (
+                                                    <span className="ml-1 text-xs opacity-80">(₹{val.price})</span>
+                                                )}
                                             </button>
                                         )
                                     })}

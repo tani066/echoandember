@@ -24,7 +24,16 @@ export function ProductForm({ product }) {
     const [existingVideos, setExistingVideos] = useState(product?.videos || [])
 
     // Options State
-    const [options, setOptions] = useState(product?.options ? JSON.parse(JSON.stringify(product.options)) : [])
+    // Options State
+    const [options, setOptions] = useState(() => {
+        if (!product?.options) return []
+        const parsed = JSON.parse(JSON.stringify(product.options))
+        // Normalize values to objects if they are strings (backward compatibility)
+        return parsed.map(opt => ({
+            ...opt,
+            values: opt.values.map(v => typeof v === 'string' ? { label: v, price: 0 } : v)
+        }))
+    })
 
     // Handlers for Files
     const handleImageChange = (e) => {
@@ -93,9 +102,22 @@ export function ProductForm({ product }) {
     const handleOptionNameChange = (index, name) => {
         const newOptions = [...options]; newOptions[index].name = name; setOptions(newOptions)
     }
-    const handleOptionValuesChange = (index, valuesString) => {
+
+    const handleAddValue = (optIndex) => {
         const newOptions = [...options]
-        newOptions[index].values = valuesString.split(",").map(v => v.trim()).filter(Boolean)
+        newOptions[optIndex].values.push({ label: "", price: 0 })
+        setOptions(newOptions)
+    }
+
+    const handleRemoveValue = (optIndex, valIndex) => {
+        const newOptions = [...options]
+        newOptions[optIndex].values.splice(valIndex, 1)
+        setOptions(newOptions)
+    }
+
+    const handleValueChange = (optIndex, valIndex, field, value) => {
+        const newOptions = [...options]
+        newOptions[optIndex].values[valIndex][field] = value
         setOptions(newOptions)
     }
 
@@ -188,14 +210,50 @@ export function ProductForm({ product }) {
                                 </Button>
                             </div>
                             {options.map((opt, index) => (
-                                <div key={index} className="flex gap-2 items-start p-3 bg-slate-50 rounded-lg border">
-                                    <div className="flex-1 space-y-2">
-                                        <Input placeholder="Option Name" value={opt.name} onChange={(e) => handleOptionNameChange(index, e.target.value)} />
-                                        <Input placeholder="Values (S, M, L)" value={opt.values.join(", ")} onChange={(e) => handleOptionValuesChange(index, e.target.value)} />
+                                <div key={index} className="p-4 bg-slate-50 rounded-lg border space-y-3">
+                                    <div className="flex justify-between items-start">
+                                        <div className="w-1/2">
+                                            <Label className="text-xs text-muted-foreground mb-1 block">Option Name</Label>
+                                            <Input
+                                                placeholder="e.g. Size, Color, Material"
+                                                value={opt.name}
+                                                onChange={(e) => handleOptionNameChange(index, e.target.value)}
+                                            />
+                                        </div>
+                                        <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveOption(index)} className="text-red-500 hover:text-red-600 hover:bg-red-50">
+                                            <Trash2 className="w-4 h-4" />
+                                        </Button>
                                     </div>
-                                    <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveOption(index)} className="text-red-500">
-                                        <X className="w-4 h-4" />
-                                    </Button>
+
+                                    <div className="space-y-2">
+                                        <Label className="text-xs text-muted-foreground">Values</Label>
+                                        {opt.values.map((val, vIndex) => (
+                                            <div key={vIndex} className="flex gap-2 items-center">
+                                                <Input
+                                                    placeholder="Label (e.g. Small)"
+                                                    className="flex-1"
+                                                    value={val.label}
+                                                    onChange={(e) => handleValueChange(index, vIndex, 'label', e.target.value)}
+                                                />
+                                                <div className="relative w-32">
+                                                    <span className="absolute left-3 top-2.5 text-xs text-muted-foreground">$</span>
+                                                    <Input
+                                                        type="number"
+                                                        placeholder="Override"
+                                                        className="pl-6"
+                                                        value={val.price || ''}
+                                                        onChange={(e) => handleValueChange(index, vIndex, 'price', parseFloat(e.target.value) || 0)}
+                                                    />
+                                                </div>
+                                                <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveValue(index, vIndex)} className="text-muted-foreground hover:text-red-500">
+                                                    <X className="w-4 h-4" />
+                                                </Button>
+                                            </div>
+                                        ))}
+                                        <Button type="button" variant="outline" size="sm" onClick={() => handleAddValue(index)} className="text-xs">
+                                            <Plus className="w-3 h-3 mr-1" /> Add Value
+                                        </Button>
+                                    </div>
                                 </div>
                             ))}
                         </CardContent>
