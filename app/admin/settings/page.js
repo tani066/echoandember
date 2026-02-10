@@ -13,9 +13,15 @@ import { Settings, Save } from "lucide-react"
 export default function SettingsPage() {
     const [isLoading, setIsLoading] = useState(false)
     const [settings, setSettings] = useState(null)
+    const [banner1Visible, setBanner1Visible] = useState(true)
+    const [banner2Visible, setBanner2Visible] = useState(true)
 
     useEffect(() => {
-        getSiteSettings().then(setSettings)
+        getSiteSettings().then((data) => {
+            setSettings(data)
+            setBanner1Visible(data.banner1Visible)
+            setBanner2Visible(data.banner2Visible)
+        })
     }, [])
 
     const handleSubmit = async (e) => {
@@ -86,7 +92,11 @@ export default function SettingsPage() {
                             <div className="space-y-4 p-4 border rounded-lg">
                                 <div className="flex items-center justify-between">
                                     <Label className="text-base font-semibold">Banner 1 (Scrolls Left)</Label>
-                                    <Switch name="banner1Visible" defaultChecked={settings.banner1Visible} />
+                                    <Switch
+                                        checked={banner1Visible}
+                                        onCheckedChange={setBanner1Visible}
+                                    />
+                                    <input type="hidden" name="banner1Visible" value={banner1Visible.toString()} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="banner1Text">Banner Text</Label>
@@ -99,7 +109,11 @@ export default function SettingsPage() {
                             <div className="space-y-4 p-4 border rounded-lg">
                                 <div className="flex items-center justify-between">
                                     <Label className="text-base font-semibold">Banner 2 (Scrolls Right)</Label>
-                                    <Switch name="banner2Visible" defaultChecked={settings.banner2Visible} />
+                                    <Switch
+                                        checked={banner2Visible}
+                                        onCheckedChange={setBanner2Visible}
+                                    />
+                                    <input type="hidden" name="banner2Visible" value={banner2Visible.toString()} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="banner2Text">Banner Text</Label>
