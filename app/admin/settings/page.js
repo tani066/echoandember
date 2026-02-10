@@ -97,7 +97,7 @@ export default function SettingsPage() {
                                         checked={banner1Visible}
                                         onCheckedChange={setBanner1Visible}
                                     />
-                                    <input type="hidden" name="banner1Visible" value={banner1Visible.toString()} />
+                                    <input type="hidden" name="banner1Visible" value={String(banner1Visible)} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="banner1Text">Banner Text</Label>
@@ -114,7 +114,7 @@ export default function SettingsPage() {
                                         checked={banner2Visible}
                                         onCheckedChange={setBanner2Visible}
                                     />
-                                    <input type="hidden" name="banner2Visible" value={banner2Visible.toString()} />
+                                    <input type="hidden" name="banner2Visible" value={String(banner2Visible)} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="banner2Text">Banner Text</Label>
