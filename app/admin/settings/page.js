@@ -19,8 +19,9 @@ export default function SettingsPage() {
     useEffect(() => {
         getSiteSettings().then((data) => {
             setSettings(data)
-            setBanner1Visible(data.banner1Visible)
-            setBanner2Visible(data.banner2Visible)
+            // Use nullish coalescing to provide defaults if values are undefined/null
+            setBanner1Visible(data.banner1Visible ?? true)
+            setBanner2Visible(data.banner2Visible ?? true)
         })
     }, [])
 
