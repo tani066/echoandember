@@ -396,28 +396,24 @@ export async function getSiteSettings() {
 }
 
 export async function updateSiteSettings(formData) {
-    const session = await auth()
-    if (session?.user?.role !== "ADMIN") {
-        throw new Error("Unauthorized")
-    }
+    try {
+        const session = await auth()
+        if (session?.user?.role !== "ADMIN") {
+            throw new Error("Unauthorized")
+        }
 
-    const storeName = formData.get("storeName")
-    const supportEmail = formData.get("supportEmail")
-    const shippingCost = parseFloat(formData.get("shippingCost"))
-    const freeShippingThreshold = parseFloat(formData.get("freeShippingThreshold"))
-    const announcementText = formData.get("announcementText")
-    const banner1Text = formData.get("banner1Text")
-    const banner1Visible = formData.get("banner1Visible") === "true"
-    const banner2Text = formData.get("banner2Text")
-    const banner2Visible = formData.get("banner2Visible") === "true"
-    const maintenanceMode = formData.get("maintenanceMode") === "on"
+        const storeName = formData.get("storeName") || "Echo & Ember"
+        const supportEmail = formData.get("supportEmail") || ""
+        const shippingCost = parseFloat(formData.get("shippingCost")) || 0
+        const freeShippingThreshold = parseFloat(formData.get("freeShippingThreshold")) || 50
+        const announcementText = formData.get("announcementText") || ""
+        const banner1Text = formData.get("banner1Text") || ""
+        const banner1Visible = formData.get("banner1Visible") === "true"
+        const banner2Text = formData.get("banner2Text") || ""
+        const banner2Visible = formData.get("banner2Visible") === "true"
+        const maintenanceMode = formData.get("maintenanceMode") === "on"
 
-    // We assume there's only one record, or we just update the first found/created
-    const uniqueSettings = await getSiteSettings()
-
-    await prisma.siteSettings.update({
-        where: { id: uniqueSettings.id },
-        data: {
+        console.log("[updateSiteSettings] Attempting to update with data:", {
             storeName,
             supportEmail,
             shippingCost,
@@ -428,12 +424,40 @@ export async function updateSiteSettings(formData) {
             banner2Text,
             banner2Visible,
             maintenanceMode
-        }
-    })
+        })
 
-    revalidatePath("/")
-    revalidatePath("/admin/settings")
-    revalidatePath("/checkout")
+        // We assume there's only one record, or we just update the first found/created
+        const uniqueSettings = await getSiteSettings()
+
+        console.log("[updateSiteSettings] Found settings record:", uniqueSettings.id)
+
+        await prisma.siteSettings.update({
+            where: { id: uniqueSettings.id },
+            data: {
+                storeName,
+                supportEmail: supportEmail || null,
+                shippingCost,
+                freeShippingThreshold,
+                announcementText,
+                banner1Text,
+                banner1Visible,
+                banner2Text,
+                banner2Visible,
+                maintenanceMode
+            }
+        })
+
+        console.log("[updateSiteSettings] Successfully updated settings")
+
+        revalidatePath("/")
+        revalidatePath("/admin/settings")
+        revalidatePath("/checkout")
+    } catch (error) {
+        console.error("[updateSiteSettings] Error:", error)
+        console.error("[updateSiteSettings] Error stack:", error.stack)
+        console.error("[updateSiteSettings] Error details:", JSON.stringify(error, null, 2))
+        throw error
+    }
 }
 
 export async function getUserProfile() {
