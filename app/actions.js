@@ -406,6 +406,10 @@ export async function updateSiteSettings(formData) {
     const shippingCost = parseFloat(formData.get("shippingCost"))
     const freeShippingThreshold = parseFloat(formData.get("freeShippingThreshold"))
     const announcementText = formData.get("announcementText")
+    const banner1Text = formData.get("banner1Text")
+    const banner1Visible = formData.get("banner1Visible") === "on"
+    const banner2Text = formData.get("banner2Text")
+    const banner2Visible = formData.get("banner2Visible") === "on"
     const maintenanceMode = formData.get("maintenanceMode") === "on"
 
     // We assume there's only one record, or we just update the first found/created
@@ -419,6 +423,10 @@ export async function updateSiteSettings(formData) {
             shippingCost,
             freeShippingThreshold,
             announcementText,
+            banner1Text,
+            banner1Visible,
+            banner2Text,
+            banner2Visible,
             maintenanceMode
         }
     })

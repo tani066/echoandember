@@ -115,6 +115,10 @@ model SiteSettings {
   shippingCost          Float    @default(0)
   freeShippingThreshold Float    @default(50)
   announcementText      String   @default("✨ FREE SHIPPING ON ORDERS OVER ₹50 ✨")
+  banner1Text           String   @default("Welcome to Echo & Ember • Handcrafted Gifts • Made with Love")
+  banner1Visible        Boolean  @default(true)
+  banner2Text           String   @default("Free Shipping on all orders above ₹999 • Pan India Delivery")
+  banner2Visible        Boolean  @default(true)
   maintenanceMode       Boolean  @default(false)
   updatedAt             DateTime @updatedAt
 }

@@ -75,6 +75,40 @@ export default function SettingsPage() {
                             </div>
                         </CardContent>
                     </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Landing Page Banners</CardTitle>
+                            <CardDescription>Scrolling banners on homepage.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            {/* Banner 1 */}
+                            <div className="space-y-4 p-4 border rounded-lg">
+                                <div className="flex items-center justify-between">
+                                    <Label className="text-base font-semibold">Banner 1 (Scrolls Left)</Label>
+                                    <Switch name="banner1Visible" defaultChecked={settings.banner1Visible} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="banner1Text">Banner Text</Label>
+                                    <Input id="banner1Text" name="banner1Text" defaultValue={settings.banner1Text} />
+                                    <p className="text-xs text-muted-foreground">Use • to separate phrases</p>
+                                </div>
+                            </div>
+
+                            {/* Banner 2 */}
+                            <div className="space-y-4 p-4 border rounded-lg">
+                                <div className="flex items-center justify-between">
+                                    <Label className="text-base font-semibold">Banner 2 (Scrolls Right)</Label>
+                                    <Switch name="banner2Visible" defaultChecked={settings.banner2Visible} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="banner2Text">Banner Text</Label>
+                                    <Input id="banner2Text" name="banner2Text" defaultValue={settings.banner2Text} />
+                                    <p className="text-xs text-muted-foreground">Use • to separate phrases</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
 
                 <div className="space-y-6">
