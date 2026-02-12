@@ -5,6 +5,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Heart, Share2, PlayCircle, ShoppingCart } from "lucide-react"
 import { useCart } from "@/components/cart-provider"
+import { useWishlist } from "@/components/wishlist-provider"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 
@@ -38,6 +39,7 @@ export function ProductDetails({ product }) {
     }
 
     const { addToCart } = useCart()
+    const { toggleWishlist, isInWishlist } = useWishlist()
 
     const handleAddToCart = () => {
         // Validation Removed as per request
@@ -52,13 +54,50 @@ export function ProductDetails({ product }) {
         toast.success("Added to cart! ✨")
     }
 
+    const handleWishlistToggle = () => {
+        toggleWishlist({
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            image: product.image,
+            category: product.category
+        })
+    }
+
+    const handleShare = async () => {
+        const shareData = {
+            title: product.title,
+            text: `Check out ${product.title} on Echo & Ember!`,
+            url: window.location.href
+        }
+
+        try {
+            // Check if Web Share API is supported
+            if (navigator.share) {
+                await navigator.share(shareData)
+                toast.success("Shared successfully! 🎉")
+            } else {
+                // Fallback: Copy link to clipboard
+                await navigator.clipboard.writeText(window.location.href)
+                toast.success("Link copied to clipboard! 📋")
+            }
+        } catch (error) {
+            // User cancelled share or clipboard denied
+            if (error.name !== 'AbortError') {
+                toast.error("Failed to share")
+            }
+        }
+    }
+
     const { reviews } = product
     const averageRating = reviews.length > 0
         ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
         : 0
 
+    const isLiked = isInWishlist(product.id)
+
     return (
-        <div className="grid md:grid-cols-2 gap-12 mb-20">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 mb-12 md:mb-20">
             {/* Gallery Section */}
             <div className="space-y-4">
                 {/* Main Media */}
@@ -117,18 +156,33 @@ export function ProductDetails({ product }) {
             <div className="flex flex-col justify-center space-y-8">
                 <div>
                     <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-bold text-primary tracking-wider uppercase bg-pink-50 px-3 py-1 rounded-full">{product.category}</span>
+                        <span className="text-xs md:text-sm font-bold text-primary tracking-wider uppercase bg-pink-50 px-3 py-1 rounded-full">{product.category}</span>
                         <div className="flex gap-2">
-                            <Button variant="ghost" size="icon" className="rounded-full hover:bg-pink-50 hover:text-pink-500">
-                                <Heart className="w-5 h-5" />
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={handleWishlistToggle}
+                                className={cn(
+                                    "rounded-full transition-all h-8 w-8 md:h-10 md:w-10",
+                                    isLiked
+                                        ? "bg-pink-50 text-pink-500 hover:bg-pink-100"
+                                        : "hover:bg-pink-50 hover:text-pink-500"
+                                )}
+                            >
+                                <Heart className={cn("w-4 h-4 md:w-5 md:h-5", isLiked && "fill-pink-500")} />
                             </Button>
-                            <Button variant="ghost" size="icon" className="rounded-full hover:bg-pink-50 hover:text-pink-500">
-                                <Share2 className="w-5 h-5" />
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={handleShare}
+                                className="rounded-full hover:bg-pink-50 hover:text-pink-500 h-8 w-8 md:h-10 md:w-10"
+                            >
+                                <Share2 className="w-4 h-4 md:w-5 md:h-5" />
                             </Button>
                         </div>
                     </div>
 
-                    <h1 className="text-4xl md:text-5xl font-bold font-serif text-slate-900 leading-tight">{product.title}</h1>
+                    <h1 className="text-3xl md:text-5xl font-bold font-serif text-slate-900 leading-tight">{product.title}</h1>
 
                     <div className="flex items-center gap-4 mt-4">
                         <span className="text-3xl font-bold text-slate-900">₹{currentPrice.toFixed(2)}</span>

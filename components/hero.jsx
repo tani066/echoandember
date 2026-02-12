@@ -55,7 +55,7 @@ export function Hero() {
             <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center relative z-10">
 
                 {/* Text Content */}
-                <div className="text-center lg:text-left space-y-8">
+                <div className="text-center lg:text-left space-y-6 md:space-y-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -66,7 +66,7 @@ export function Hero() {
                         <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">Handcrafted with Love</span>
                     </motion.div>
 
-                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 leading-[1.1]">
+                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 leading-[1.1]">
                         <span className="block overflow-hidden">
                             <motion.span
                                 initial={{ y: 100 }}
@@ -109,13 +109,13 @@ export function Hero() {
                         transition={{ duration: 0.6, delay: 0.6 }}
                         className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start"
                     >
-                        <Link href="/shop">
-                            <Button size="lg" className="rounded-full px-8 py-6 text-lg bg-slate-900 hover:bg-slate-800 shadow-xl shadow-slate-200 hover:scale-105 transition-all duration-300">
+                        <Link href="/shop" className="w-full sm:w-auto">
+                            <Button size="lg" className="w-full sm:w-auto rounded-full px-8 py-6 text-lg bg-slate-900 hover:bg-slate-800 shadow-xl shadow-slate-200 hover:scale-105 transition-all duration-300">
                                 Start Gifting
                             </Button>
                         </Link>
-                        <Link href="/#shop-categories">
-                            <Button size="lg" variant="outline" className="rounded-full px-8 py-6 text-lg border-2 hover:bg-white hover:border-pink-200 text-slate-600 group">
+                        <Link href="/#shop-categories" className="w-full sm:w-auto">
+                            <Button size="lg" variant="outline" className="w-full sm:w-auto rounded-full px-8 py-6 text-lg border-2 hover:bg-white hover:border-pink-200 text-slate-600 group">
                                 View Collection <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </Button>
                         </Link>
@@ -126,7 +126,7 @@ export function Hero() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 1, duration: 1 }}
-                        className="pt-8 flex items-center justify-center lg:justify-start gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500"
+                        className="pt-4 md:pt-8 flex flex-wrap items-center justify-center lg:justify-start gap-4 md:gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500"
                     >
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-green-500" />
@@ -139,7 +139,20 @@ export function Hero() {
                     </motion.div>
                 </div>
 
-                {/* Interactive Hero Image */}
+                {/* Mobile Hero Image (Static) - Visible only on small screens */}
+                <div className="lg:hidden relative w-full aspect-square max-w-sm mx-auto mt-8">
+                    <div className="absolute inset-0 bg-white rounded-[2rem] shadow-xl overflow-hidden border-4 border-white transform rotate-3">
+                        <Image
+                            src="/image2.jpeg"
+                            alt="Hero Gift"
+                            fill
+                            className="object-cover"
+                            priority
+                        />
+                    </div>
+                </div>
+
+                {/* Interactive Hero Image (3D) - Visible only on large screens */}
                 <div className="relative hidden lg:block perspective-1000">
                     <HeroCard mouseX={mouseX} mouseY={mouseY} />
                 </div>

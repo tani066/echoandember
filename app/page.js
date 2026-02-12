@@ -44,7 +44,7 @@ export default async function Home() {
       <ProductShowcase products={products} />
 
       {/* Why Choose Us - Kept simple but fits the new theme */}
-      <section className="py-24 bg-white border-t border-slate-50">
+      <section className="py-12 md:py-24 bg-white border-t border-slate-50">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-12 text-center">
             <div className="p-8 rounded-[2.5rem] bg-pink-50/50 hover:bg-pink-50 transition-all duration-300 hover:-translate-y-2">
