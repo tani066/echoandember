@@ -39,7 +39,18 @@ export async function addProduct(formData) {
     const description = formData.get("description")
     const price = parseFloat(formData.get("price"))
     const stock = parseInt(formData.get("stock"))
-    const category = formData.get("category")
+    // Handle multiple categories
+    const categoriesJson = formData.get("categories")
+    let categories = []
+    try {
+        categories = JSON.parse(categoriesJson || "[]")
+    } catch (e) {
+        console.error("Error parsing categories:", e)
+    }
+
+    // Set legacy category to the first selected one, or empty string
+    const category = categories.length > 0 ? categories[0] : ""
+
     const optionsJson = formData.get("options")
 
     // Parse options
@@ -83,6 +94,7 @@ export async function addProduct(formData) {
             price,
             stock,
             category,
+            categories,
             image: primaryImage, // Keep for backward compatibility
             images: imageUrls,
             videos: videoUrls,
@@ -111,17 +123,6 @@ export async function deleteProduct(id) {
     revalidatePath("/")
 }
 
-// Helper to delete file from Cloudinary 
-// We need to import it. Since `deleteFromCloudinary` is a named export now.
-// However, `lib/cloudinary.js` exports default `cloudinary` and named `deleteFromCloudinary`.
-// We need to update the import at the top of this file first. But since we are in `replace_file_content` for `updateProduct`...
-// I should have updated the import first. 
-// I will use a separate `replace_file_content` for layout imports or just use the existing one if I can.
-// Actually, I can't change the import lines in this specific call if they are outside lines 114-198.
-// I will assume I can update the import in a subsequent step or previous step.
-// WAIT, I need to update the import FIRST or concurrently. 
-// I'll stick to updating the function logic here and fix the import in another tool call.
-
 export async function updateProduct(id, formData) {
     const session = await auth()
     if (session?.user?.role !== "ADMIN") {
@@ -132,7 +133,19 @@ export async function updateProduct(id, formData) {
     const description = formData.get("description")
     const price = parseFloat(formData.get("price"))
     const stock = parseInt(formData.get("stock"))
-    const category = formData.get("category")
+
+    // Handle multiple categories
+    const categoriesJson = formData.get("categories")
+    let categories = []
+    try {
+        categories = JSON.parse(categoriesJson || "[]")
+    } catch (e) {
+        console.error("Error parsing categories:", e)
+    }
+
+    // Set legacy category to the first selected one
+    const category = categories.length > 0 ? categories[0] : ""
+
     const optionsJson = formData.get("options")
 
     // Parse Existing Assets (Trusted State from Client)
@@ -170,7 +183,6 @@ export async function updateProduct(id, formData) {
     const imagesToDelete = currentImages.filter(url => !keptImages.includes(url))
     console.log("DEBUG: Images to Delete:", imagesToDelete)
 
-    //We need to import deleteFromCloudinary. I will do it in next step.
     const { deleteFromCloudinary } = await import("@/lib/cloudinary")
 
     for (const url of imagesToDelete) {
@@ -221,6 +233,7 @@ export async function updateProduct(id, formData) {
             price,
             stock,
             category,
+            categories,
             image: primaryImage,
             images: updatedImages,
             videos: updatedVideos,

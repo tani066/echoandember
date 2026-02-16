@@ -16,6 +16,7 @@ import { CATEGORIES } from "@/lib/constants"
 export function ProductForm({ product }) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
+    const [selectedCategories, setSelectedCategories] = useState(product?.categories || (product?.category ? [product.category] : []))
 
     // Files State
     const [imageFiles, setImageFiles] = useState([]) // For new uploads
@@ -123,11 +124,17 @@ export function ProductForm({ product }) {
 
     async function onSubmit(event) {
         event.preventDefault()
+        if (selectedCategories.length === 0) {
+            toast.error("Please select at least one category")
+            return
+        }
         setLoading(true)
 
         const formData = new FormData(event.currentTarget)
 
         try {
+            // Add Categories
+            formData.append("categories", JSON.stringify(selectedCategories))
             // Add Options
             formData.set("options", JSON.stringify(options))
 
@@ -181,21 +188,31 @@ export function ProductForm({ product }) {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="category">Category</Label>
-                                <select
-                                    id="category"
-                                    name="category"
-                                    defaultValue={product?.category}
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    required
-                                >
-                                    <option value="">Select Category</option>
+                                <Label>Categories</Label>
+                                <div className="grid grid-cols-2 gap-2 p-4 border rounded-md max-h-[200px] overflow-y-auto">
                                     {CATEGORIES.map((cat) => (
-                                        <option key={cat.name} value={cat.name}>
-                                            {cat.name}
-                                        </option>
+                                        <div key={cat.name} className="flex items-center space-x-2">
+                                            <input
+                                                type="checkbox"
+                                                id={`cat-${cat.name}`}
+                                                value={cat.name}
+                                                checked={selectedCategories.includes(cat.name)}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setSelectedCategories([...selectedCategories, cat.name])
+                                                    } else {
+                                                        setSelectedCategories(selectedCategories.filter(c => c !== cat.name))
+                                                    }
+                                                }}
+                                                className="h-4 w-4 rounded border-gray-300 text-pink-600 focus:ring-pink-500"
+                                            />
+                                            <label htmlFor={`cat-${cat.name}`} className="text-sm cursor-pointer select-none">
+                                                {cat.name} {cat.emoji}
+                                            </label>
+                                        </div>
                                     ))}
-                                </select>
+                                </div>
+                                {selectedCategories.length === 0 && <p className="text-xs text-red-500">Please select at least one category.</p>}
                             </div>
                         </CardContent>
                     </Card>

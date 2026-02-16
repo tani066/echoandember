@@ -101,21 +101,26 @@ export function ProductDetails({ product }) {
             {/* Gallery Section */}
             <div className="space-y-4">
                 {/* Main Media */}
-                <div className="relative aspect-square bg-slate-50 rounded-3xl overflow-hidden border border-slate-100 flex items-center justify-center">
+                <div className="relative w-full bg-slate-50 rounded-3xl overflow-hidden border border-slate-100 flex items-center justify-center">
                     {activeMedia?.type === 'video' ? (
                         <video
                             src={activeMedia.src}
                             controls
                             autoPlay
-                            className="w-full h-full object-contain"
+                            /* Change 1: Set height to auto so it respects the video's ratio */
+                            className="w-full h-auto"
                         />
                     ) : (
-                        <div className="relative w-full h-full group">
+                        <div className="relative w-full">
+                            {/* Change 2: Next.js Image component adjustment */}
                             <Image
                                 src={typeof activeMedia === 'string' ? activeMedia : activeMedia?.src || "/image1.jpeg"}
                                 alt={product.title}
-                                fill
-                                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                /* Remove 'fill' and replace with this setup to respect aspect ratio */
+                                width={0}
+                                height={0}
+                                sizes="100vw"
+                                className="w-full h-auto object-contain transition-transform duration-500 hover:scale-110"
                             />
                         </div>
                     )}
@@ -156,7 +161,13 @@ export function ProductDetails({ product }) {
             <div className="flex flex-col justify-center space-y-8">
                 <div>
                     <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs md:text-sm font-bold text-primary tracking-wider uppercase bg-pink-50 px-3 py-1 rounded-full">{product.category}</span>
+                        <div className="flex flex-wrap gap-2">
+                            {(product.categories && product.categories.length > 0 ? product.categories : [product.category]).map((cat, idx) => (
+                                <span key={idx} className="text-xs md:text-sm font-bold text-primary tracking-wider uppercase bg-pink-50 px-3 py-1 rounded-full">
+                                    {cat}
+                                </span>
+                            ))}
+                        </div>
                         <div className="flex gap-2">
                             <Button
                                 variant="ghost"

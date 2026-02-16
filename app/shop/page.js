@@ -13,11 +13,12 @@ export default async function ShopPage(props) {
 
     const where = {
         AND: [
-            category ? { category: { equals: category, mode: 'insensitive' } } : {},
+            category && category !== 'Gifts' ? { categories: { has: category } } : {},
             q ? {
                 OR: [
                     { title: { contains: q, mode: 'insensitive' } },
-                    { description: { contains: q, mode: 'insensitive' } }
+                    { description: { contains: q, mode: 'insensitive' } },
+                    { category: { contains: q, mode: 'insensitive' } } // Also search old category field for now
                 ]
             } : {}
         ]

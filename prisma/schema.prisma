@@ -66,6 +66,7 @@ model Product {
   images      String[] // Additional images
   videos      String[] // Product videos
   category    String
+  categories  String[] @default([])
   options     Json?    // Flexible options like { "Size": ["S", "M"], "Color": ["Red"] }
   stock       Int      @default(0)
   createdAt   DateTime @default(now())
