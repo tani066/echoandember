@@ -99,9 +99,9 @@ export function ProductCard({
                 <div className="flex flex-col gap-1.5">
                     <span className="text-[11px] font-bold text-pink-500 uppercase tracking-widest opacity-80">
                         {/* Show categories joined by dot */}
-                        {[...(category ? [category] : []), ...(id && !category ? [] : [])] /* This is tricky because props are just 'category' string */}
+                        {[...(category ? [category] : []), ...(id && !category ? [] : [])] /* This is tricky because props are just 'category' string 
                         {/* Wait, the component receives 'category' prop. I need to update where it is used or passed. */}
-                        {category}
+                        {/* {category} */}
                     </span>
                     <Link href={`/products/${id}`}>
                         <h3 className="text-lg font-bold text-slate-800 tracking-tight leading-snug hover:text-pink-600 transition-colors">

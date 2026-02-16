@@ -27,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import Image from "next/image"
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = React.useState(false)
@@ -74,77 +75,82 @@ export function Navbar() {
         {announcement}
       </div>
 
-      <div className="container mx-auto px-4 h-20 flex items-center justify-between">
-        {/* Mobile Menu */}
-        <div className="md:hidden flex items-center gap-2">
-          <BackButton />
+      <div className="container mx-auto px-4 h-30 flex items-center justify-between">
+        
+        {/* Wrapper for Mobile Menu and Logo to keep them on the left */}
+        <div className="flex items-center gap-2">
+          {/* Mobile Menu */}
+          <div className="md:hidden flex items-center gap-2">
+            <BackButton />
 
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-foreground hover:bg-pink-50">
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="bg-background border-r-pink-200">
-              <nav className="flex flex-col gap-6 mt-10">
-                <form onSubmit={handleSearch} className="relative">
-                  <Input
-                    type="text"
-                    placeholder="Search..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-3 pr-8 w-full"
-                  />
-                  <Search className="w-4 h-4 text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </form>
-                <Link href="/" className="text-xl font-medium hover:text-primary transition-colors">
-                  Home
-                </Link>
-                <Link href="/shop" className="text-xl font-medium hover:text-primary transition-colors">
-                  Shop
-                </Link>
-                <Link href="/about" className="text-xl font-medium hover:text-primary transition-colors">
-                  About Us
-                </Link>
-                <Link href="/contact" className="text-xl font-medium hover:text-primary transition-colors">
-                  Contact
-                </Link>
-                <Link href="/wishlist" className="text-xl font-medium hover:text-primary transition-colors">
-                  Wishlist
-                </Link>
-                {session && (
-                  <Link href="/orders" className="text-xl font-medium hover:text-primary transition-colors">
-                    Your Orders
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-foreground hover:bg-pink-50">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="bg-background border-r-pink-200 w-[300px] sm:w-[350px]">
+                <nav className="flex flex-col gap-6 mt-10 items-center text-center px-4">
+                  <form onSubmit={handleSearch} className="relative w-full max-w-sm">
+                    <Input
+                      type="text"
+                      placeholder="Search..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-3 pr-8 w-full text-center"
+                    />
+                    <Search className="w-4 h-4 text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </form>
+                  <Link href="/" className="text-xl font-medium hover:text-primary transition-colors">
+                    Home
                   </Link>
-                )}
-                {session?.user?.role === "ADMIN" && (
-                  <Link href="/admin" className="text-xl font-medium text-primary hover:text-primary/80 transition-colors">
-                    Admin Dashboard
+                  <Link href="/shop" className="text-xl font-medium hover:text-primary transition-colors">
+                    Shop
                   </Link>
-                )}
-                {session ? (
-                  <button onClick={() => signOut()} className="text-xl font-medium text-left hover:text-primary transition-colors">
-                    Log out
-                  </button>
-                ) : (
-                  <Link href="/auth/signin" className="text-xl font-medium hover:text-primary transition-colors">
-                    Sign In
+                  <Link href="/about" className="text-xl font-medium hover:text-primary transition-colors">
+                    About Us
                   </Link>
-                )}
-              </nav>
-            </SheetContent>
-          </Sheet>
-        </div>
-
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="relative">
-            {/* <Sparkles className="h-6 w-6 text-primary group-hover:rotate-12 transition-transform duration-300" /> */}
+                  <Link href="/contact" className="text-xl font-medium hover:text-primary transition-colors">
+                    Contact
+                  </Link>
+                  <Link href="/wishlist" className="text-xl font-medium hover:text-primary transition-colors">
+                    Wishlist
+                  </Link>
+                  {session && (
+                    <Link href="/orders" className="text-xl font-medium hover:text-primary transition-colors">
+                      Your Orders
+                    </Link>
+                  )}
+                  {session?.user?.role === "ADMIN" && (
+                    <Link href="/admin" className="text-xl font-medium text-primary hover:text-primary/80 transition-colors">
+                      Admin Dashboard
+                    </Link>
+                  )}
+                  {session ? (
+                    <button onClick={() => signOut()} className="text-xl font-medium hover:text-primary transition-colors">
+                      Log out
+                    </button>
+                  ) : (
+                    <Link href="/auth/signin" className="text-xl font-medium hover:text-primary transition-colors">
+                      Sign In
+                    </Link>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
-          <span className="text-2xl font-bold tracking-tight text-foreground font-serif">
-            Echo<span className="text-primary">&</span>Ember
-          </span>
-        </Link>
+
+          {/* Logo */}
+         <Link href="/" className="flex items-start gap-2 group">
+  <Image 
+    src="/logo.jpeg" 
+    alt="Logo" 
+    width={120} 
+    height={120} 
+    className="rounded-full w-[80px] h-[80px] md:w-[120px] md:h-[120px] object-cover" 
+  />
+</Link>
+        </div>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">

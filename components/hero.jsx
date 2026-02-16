@@ -85,7 +85,7 @@ export function Hero() {
                                 className="block"
                             >
                                 into <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 relative">
-                                    Magic
+                                    Memories
                                     <svg className="absolute w-full h-3 -bottom-1 left-0 text-pink-200 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
                                         <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
                                     </svg>
