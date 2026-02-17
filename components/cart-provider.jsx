@@ -2,11 +2,17 @@
 
 import { createContext, useContext, useState, useEffect } from "react"
 
+import { getSiteSettings } from "@/app/actions"
+
 const CartContext = createContext({})
 
 export function CartProvider({ children }) {
     const [items, setItems] = useState([])
     const [isOpen, setIsOpen] = useState(false)
+    const [settings, setSettings] = useState({
+        shippingCost: 0,
+        freeShippingThreshold: 50
+    })
 
     // Load cart from local storage on mount
     useEffect(() => {
@@ -14,6 +20,16 @@ export function CartProvider({ children }) {
         if (savedCart) {
             setItems(JSON.parse(savedCart))
         }
+    }, [])
+
+    // Load settings
+    useEffect(() => {
+        getSiteSettings().then(s => {
+            if (s) setSettings({
+                shippingCost: s.shippingCost,
+                freeShippingThreshold: s.freeShippingThreshold
+            })
+        })
     }, [])
 
     // Save cart to local storage on change
@@ -70,6 +86,11 @@ export function CartProvider({ children }) {
     const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
     const count = items.reduce((sum, item) => sum + item.quantity, 0)
 
+    // Calculate Shipping
+    const shippingAmount = total > 0 && total < settings.freeShippingThreshold ? settings.shippingCost : 0
+    const grandTotal = total + shippingAmount
+    const freeShippingThreshold = settings.freeShippingThreshold
+
     return (
         <CartContext.Provider value={{
             items,
@@ -80,7 +101,10 @@ export function CartProvider({ children }) {
             isOpen,
             setIsOpen,
             total,
-            count
+            count,
+            shippingAmount,
+            grandTotal,
+            freeShippingThreshold
         }}>
             {children}
         </CartContext.Provider>

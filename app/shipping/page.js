@@ -8,7 +8,7 @@ export default function ShippingPage() {
 
             {/* Hero */}
             <section className="py-16 bg-pink-50 text-center">
-                <h1 className="text-4xl font-bold font-serif mb-4 text-gray-900">Shipping & Returns</h1>
+                <h1 className="text-4xl font-bold font-serif mb-4 text-gray-900">Shipping Returns & Payments</h1>
                 <p className="text-muted-foreground max-w-xl mx-auto px-4">
                     Everything you need to know about how your special gifts reach you.
                 </p>
@@ -66,6 +66,15 @@ export default function ShippingPage() {
                         
                         </div>
                     </div>
+                    <div className="space-y-6">
+                        <h2 className="text-2xl font-bold text-primary border-b border-pink-100 pb-2">Payment Policy</h2>
+
+                        <div className="space-y-4 text-muted-foreground">
+                           <p>We do not offer Cash on Delivery (COD). We accept online payments only, as all our products are made to order. We do not maintain ready stock, and each item is crafted specifically after an order is placed. Once your payment is confirmed, your order is processed immediately.</p>
+                           <p>To ensure a secure and transparent transaction process, we follow an online payment–only system. This helps us prevent fraudulent orders and maintain a safe experience for both our customers and our business</p>
+                        </div>
+                    </div>
+
 
                 </div>
             </section>

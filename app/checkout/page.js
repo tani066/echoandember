@@ -19,11 +19,12 @@ import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
 import { Sparkles, CreditCard, Truck } from "lucide-react"
 
-import { createOrder, getUserProfile, getSiteSettings } from "@/app/actions"
+import Script from "next/script"
+import { createOrder, getUserProfile, getSiteSettings, createRazorpayOrder, verifyPayment } from "@/app/actions"
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const { items, total, clearCart } = useCart()
+  const { items, total, clearCart, shippingAmount, grandTotal } = useCart()
 
   const [user, setUser] = useState(null)
   const [settings, setSettings] = useState({
@@ -55,19 +56,62 @@ export default function CheckoutPage() {
     }
 
     try {
-      const result = await createOrder(items, shippingDetails)
+      // 1. Create Order on Server (Razorpay)
+      const orderData = await createRazorpayOrder(items, shippingDetails)
 
-      if (result.success) {
-        clearCart()
-        toast.success("Order placed successfully ✨", {
-          description: `Order #${result.orderId} created`,
-        })
-        router.push("/")
-      } else {
-        toast.error("Checkout failed", {
-          description: result.error || "Something went wrong",
-        })
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "Echo & Ember",
+        description: "Order Payment",
+        order_id: orderData.id,
+        handler: async function (response) {
+          // 2. Verify Payment on Server
+          try {
+            const verification = await verifyPayment(
+              response.razorpay_order_id,
+              response.razorpay_payment_id,
+              response.razorpay_signature
+            )
+
+            if (verification.success) {
+              // 3. Create Order in DB
+              const result = await createOrder(items, shippingDetails, response.razorpay_payment_id)
+
+              if (result.success) {
+                clearCart()
+                toast.success("Payment successful! Order placed. ✨", {
+                  description: `Order #${result.orderId} created`,
+                })
+                router.push("/")
+              } else {
+                toast.error("Order creation failed after payment. Please contact support.")
+              }
+            } else {
+              toast.error("Payment verification failed.")
+            }
+          } catch (err) {
+            console.error("Verification Error:", err)
+            toast.error("Error verifying payment")
+          }
+        },
+        prefill: {
+          name: `${shippingDetails.firstName} ${shippingDetails.lastName}`,
+          email: shippingDetails.email,
+          contact: shippingDetails.phone,
+        },
+        theme: {
+          color: "#ec4899", // Pink-500
+        },
       }
+
+      const rzp1 = new window.Razorpay(options)
+      rzp1.on("payment.failed", function (response) {
+        toast.error(response.error.description)
+      })
+      rzp1.open()
+
     } catch (err) {
       toast.error("Checkout failed", {
         description: err.message,
@@ -92,6 +136,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen pt-24 pb-12 px-4 bg-gray-50/50">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <div className="container mx-auto max-w-6xl">
         <h1 className="text-3xl font-bold mb-8 flex items-center gap-2">
           <Sparkles className="text-primary" /> Checkout
@@ -112,9 +157,9 @@ export default function CheckoutPage() {
                   <Input name="firstName" placeholder="First Name" required />
                   <Input name="lastName" placeholder="Last Name" required />
                 </div>
-                <Input name="email" type="email" placeholder="Email" required />
-                <Input name="phone" placeholder="Phone" required />
-                <Input name="address" placeholder="Address" required />
+                <Input name="email" type="email" placeholder="Email" required defaultValue={user?.email} />
+                <Input name="phone" placeholder="Phone" required defaultValue={user?.phone} />
+                <Input name="address" placeholder="Address" required defaultValue={user?.address} />
                 <div className="grid grid-cols-2 gap-4">
                   <Input name="city" placeholder="City" required />
                   <Input name="zip" placeholder="ZIP" required />
@@ -151,9 +196,24 @@ export default function CheckoutPage() {
 
               <Separator />
 
-              <div className="flex justify-between font-bold">
-                <span>Total</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Subtotal</span>
                 <span>₹{total.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Shipping</span>
+                {shippingAmount === 0 ? (
+                  <span className="text-green-600 font-medium">Free</span>
+                ) : (
+                  <span>₹{shippingAmount.toFixed(2)}</span>
+                )}
+              </div>
+
+              <Separator />
+
+              <div className="flex justify-between font-bold text-lg">
+                <span>Total</span>
+                <span>₹{grandTotal.toFixed(2)}</span>
               </div>
             </CardContent>
 
@@ -161,10 +221,10 @@ export default function CheckoutPage() {
               <Button
                 type="submit"
                 form="checkout-form"
-                className="w-full"
+                className="w-full h-12 text-lg"
                 disabled={isLoading}
               >
-                {isLoading ? "Processing..." : "Place Order"}
+                {isLoading ? "Processing..." : "Pay Now"}
               </Button>
             </CardFooter>
           </Card>

@@ -14,7 +14,7 @@ import Link from "next/link"
 import Image from "next/image"
 
 export function CartDrawer() {
-    const { items, isOpen, setIsOpen, updateQuantity, removeFromCart, total } = useCart()
+    const { items, isOpen, setIsOpen, updateQuantity, removeFromCart, total, shippingAmount, grandTotal, freeShippingThreshold } = useCart()
 
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -22,7 +22,7 @@ export function CartDrawer() {
                 <SheetHeader className="border-b pb-4">
                     <SheetTitle className="flex items-center gap-2 text-xl font-serif text-foreground">
                         <ShoppingBag className="w-5 h-5 text-primary" />
-                        Your Sparkle Basket
+                        Your Basket
                     </SheetTitle>
                 </SheetHeader>
 
@@ -108,11 +108,20 @@ export function CartDrawer() {
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <span className="text-muted-foreground">Shipping</span>
-                                    <span className="text-green-600 font-medium">Free</span>
+                                    {shippingAmount === 0 ? (
+                                        <span className="text-green-600 font-medium">Free</span>
+                                    ) : (
+                                        <span className="text-foreground font-medium">₹{shippingAmount.toFixed(2)}</span>
+                                    )}
                                 </div>
+                                {shippingAmount > 0 && (
+                                    <div className="text-xs text-muted-foreground text-right">
+                                        Add ₹{(freeShippingThreshold - total).toFixed(2)} more for free shipping
+                                    </div>
+                                )}
                                 <div className="flex justify-between text-lg font-bold border-t pt-2 mt-2">
                                     <span>Total</span>
-                                    <span>₹{total.toFixed(2)}</span>
+                                    <span>₹{grandTotal.toFixed(2)}</span>
                                 </div>
                             </div>
 
@@ -125,6 +134,6 @@ export function CartDrawer() {
                     </SheetFooter>
                 )}
             </SheetContent>
-        </Sheet>
+        </Sheet >
     )
 }

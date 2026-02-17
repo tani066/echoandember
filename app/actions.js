@@ -248,7 +248,68 @@ export async function updateProduct(id, formData) {
 
 // --- Order Actions ---
 
-export async function createOrder(items, shippingDetails) {
+import Razorpay from "razorpay"
+import crypto from "crypto"
+
+export async function createRazorpayOrder(items, shippingDetails) {
+    const session = await auth()
+    if (!session) {
+        throw new Error("You must be signed in to place an order.")
+    }
+
+    let total = 0
+    for (const item of items) {
+        const product = await prisma.product.findUnique({ where: { id: item.id } })
+        if (product) {
+            total += product.price * item.quantity
+        }
+    }
+
+    // Calculate Shipping
+    const settings = await getSiteSettings()
+    if (total < settings.freeShippingThreshold) {
+        total += settings.shippingCost
+    }
+
+    const razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET,
+    })
+
+    const options = {
+        amount: Math.round(total * 100), // amount in smallest currency unit
+        currency: "INR",
+        receipt: "receipt_" + Math.random().toString(36).substring(7),
+    }
+
+    try {
+        const order = await razorpay.orders.create(options)
+        return {
+            id: order.id,
+            currency: order.currency,
+            amount: order.amount,
+        }
+    } catch (error) {
+        console.error("Razorpay Error:", error)
+        throw new Error("Could not create Razorpay order")
+    }
+}
+
+export async function verifyPayment(razorpay_order_id, razorpay_payment_id, razorpay_signature) {
+    const body = razorpay_order_id + "|" + razorpay_payment_id
+    const expectedSignature = crypto
+        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+        .update(body.toString())
+        .digest("hex")
+
+    if (expectedSignature === razorpay_signature) {
+        return { success: true }
+    } else {
+        return { success: false, error: "Invalid signature" }
+    }
+}
+
+export async function createOrder(items, shippingDetails, paymentId = null) {
     const session = await auth()
     if (!session) {
         throw new Error("You must be signed in to place an order.")
@@ -282,11 +343,19 @@ export async function createOrder(items, shippingDetails) {
         }
     }
 
+    // Calculate Shipping (Server Side Verification)
+    const settings = await getSiteSettings()
+    let shippingCost = 0
+    if (total < settings.freeShippingThreshold) {
+        shippingCost = settings.shippingCost
+        total += shippingCost
+    }
+
     const order = await prisma.order.create({
         data: {
             userId: session.user.id,
             total: total,
-            status: "CONFIRMED", // Simulating immediate payment
+            status: paymentId ? "PAID" : "CONFIRMED", // Set to PAID if we have a payment ID
             shippingAddress: JSON.stringify(shippingDetails),
             items: {
                 create: orderItemsData,
