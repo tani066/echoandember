@@ -116,10 +116,14 @@ export function Navbar() {
                   <Link href="/wishlist" className="text-xl font-medium hover:text-primary transition-colors">
                     Wishlist
                   </Link>
+                  <Link href="/shipping" className="text-xl font-medium hover:text-primary transition-colors">
+                    Shipping Returns & Payment
+                  </Link>
                   {session && (
                     <Link href="/orders" className="text-xl font-medium hover:text-primary transition-colors">
                       Your Orders
                     </Link>
+                    
                   )}
                   {session?.user?.role === "ADMIN" && (
                     <Link href="/admin" className="text-xl font-medium text-primary hover:text-primary/80 transition-colors">
@@ -158,6 +162,7 @@ export function Navbar() {
           <NavLink href="/shop">Shop</NavLink>
           <NavLink href="/about">About Us</NavLink>
           <NavLink href="/contact">Contact</NavLink>
+          <NavLink href="/shipping">Shipping Returns & Payments</NavLink>
           {session && (
             <NavLink href="/orders">Orders</NavLink>
           )}
