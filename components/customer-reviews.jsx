@@ -31,7 +31,7 @@ export function CustomerReviews() {
                     {extendedReviews.map((review, index) => (
                         <div
                             key={index}
-                            className="relative w-[300px] h-[300px] md:w-[350px] md:h-[350px] mx-4 rounded-2xl shadow-sm border border-pink-100 overflow-hidden hover:shadow-md transition-shadow"
+                            className="relative w-[300px] h-[300px] md:w-[450px] md:h-[350px] mx-4 rounded-2xl shadow-sm border border-pink-100 overflow-hidden hover:shadow-md transition-shadow"
                         >
                             <Image
                                 src={review.image}
