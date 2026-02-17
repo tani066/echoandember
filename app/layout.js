@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Echo & Ember | Sparkling Boutique",
+  title: "Echo & Ember",
   description: "Handcrafted accessories for magical moments.",
 };
 
