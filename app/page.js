@@ -4,6 +4,7 @@ import { Hero } from "@/components/hero"
 import { FeaturedCategories } from "@/components/featured-categories"
 import { ProductShowcase } from "@/components/product-showcase"
 import { Marquee } from "@/components/marquee"
+import { CustomerReviews } from "@/components/customer-reviews"
 import { getSiteSettings } from "@/app/actions"
 
 import { Button } from "@/components/ui/button"
@@ -43,7 +44,6 @@ export default async function Home() {
 
       <ProductShowcase products={products} />
 
-      {/* Why Choose Us - Kept simple but fits the new theme */}
       <section className="py-12 md:py-24 bg-white border-t border-slate-50">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-12 text-center">
@@ -65,6 +65,8 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      <CustomerReviews />
     </main>
   )
 }
