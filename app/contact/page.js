@@ -46,7 +46,7 @@ export default function ContactPage() {
                                 </div>
                                 <div>
                                     <p className="font-medium">Phone</p>
-                                    <p className="text-muted-foreground text-sm">8463050025</p>
+                                    <p className="text-muted-foreground text-sm">+91 7610701242</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">

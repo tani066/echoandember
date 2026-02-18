@@ -160,13 +160,13 @@ export default async function OrderDetailPage({ params }) {
                                                 <p className="text-sm mt-1">Qty: {item.quantity}</p>
                                             </div>
                                         </div>
-                                        <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                                        <p className="font-medium">₹{(item.price * item.quantity).toFixed(2)}</p>
                                     </div>
                                 ))}
                                 <Separator />
                                 <div className="flex justify-between font-bold text-lg">
                                     <span>Total</span>
-                                    <span>${order.total.toFixed(2)}</span>
+                                    <span>₹{order.total.toFixed(2)}</span>
                                 </div>
                             </div>
                         </CardContent>
