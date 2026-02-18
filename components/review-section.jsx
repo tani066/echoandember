@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Star, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -15,10 +16,17 @@ export function ReviewSection({ productId, reviews }) {
     const [comment, setComment] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
 
+    const router = useRouter()
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (!session) {
-            toast.error("Please sign in to leave a review")
+            toast.error("Please sign in to leave a review", {
+                action: {
+                    label: "Sign In",
+                    onClick: () => router.push("/auth/signin?callbackUrl=/products/" + productId),
+                },
+            })
             return
         }
         setIsSubmitting(true)

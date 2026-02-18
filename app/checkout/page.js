@@ -44,6 +44,17 @@ export default function CheckoutPage() {
     e.preventDefault()
     setIsLoading(true)
 
+    if (!user) {
+      toast.error("You must be signed in to place an order.", {
+        action: {
+          label: "Sign In",
+          onClick: () => router.push("/auth/signin?callbackUrl=/checkout"),
+        },
+      })
+      setIsLoading(false)
+      return
+    }
+
     const formData = new FormData(e.target)
     const shippingDetails = {
       firstName: formData.get("firstName"),
@@ -113,8 +124,12 @@ export default function CheckoutPage() {
       rzp1.open()
 
     } catch (err) {
-      toast.error("Checkout failed", {
+      toast.error("Checkout failed. Please Sign In", {
         description: err.message,
+        action: {
+          label: "Sign In",
+          onClick: () => router.push("/auth/signin?callbackUrl=/checkout"),
+        },
       })
     } finally {
       setIsLoading(false)

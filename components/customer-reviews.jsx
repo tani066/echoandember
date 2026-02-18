@@ -3,14 +3,17 @@
 import Image from "next/image"
 
 const REVIEWS = [
-    { image: "/placeholder-user1.jpeg" },
-    { image: "/placeholder-user2.jpeg" },
-    { image: "/placeholder-user3.jpeg" },
-    { image: "/placeholder-user4.jpeg" },
-    { image: "/placeholder-user5.jpeg" },
-    { image: "/placeholder-user6.jpeg" },
-    { image: "/placeholder-user7.jpeg" },
-    { image: "/placeholder-user8.jpeg" }
+    { image: "/user1.jpeg" },
+    { image: "/user2.jpeg" },
+    { image: "/user3.jpeg" },
+    { image: "/user4.jpeg" },
+    { image: "/user5.jpeg" },
+    { image: "/user6.jpeg" },
+    { image: "/user7.jpeg" },
+    { image: "/user8.jpeg" },
+    { image: "/user9.jpeg" },
+    { image: "/user10.jpeg" }
+
 ]
 
 export function CustomerReviews() {
