@@ -15,15 +15,18 @@ export function ProductCard({
     price,
     image = "/image1.jpeg",
     category = "Accessories",
-    isNew = false
+    isNew = false,
+    stock = 1 // Default to 1 (in stock) to prevent breaking existing usages until updated
 }) {
     const { addToCart } = useCart()
     const { toggleWishlist, isInWishlist } = useWishlist()
     const inWishlist = isInWishlist(id)
+    const isOutOfStock = stock <= 0
 
     const handleAddToCart = (e) => {
         e.preventDefault()
         e.stopPropagation()
+        if (isOutOfStock) return
         addToCart({ id, title, price, image, category })
         toast.success("Added to your collection ✨")
     }
@@ -39,7 +42,11 @@ export function ProductCard({
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-slate-50">
                 {/* Floating Badges */}
                 <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
-                    {isNew && (
+                    {isOutOfStock ? (
+                        <div className="bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm border border-white/20">
+                            <span className="text-[10px] font-bold tracking-tight text-white uppercase">Out of Stock</span>
+                        </div>
+                    ) : isNew && (
                         <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm border border-white/20">
                             <Sparkles className="w-3 h-3 text-pink-500 fill-pink-500" />
                             <span className="text-[10px] font-bold tracking-tight text-slate-800 uppercase">New</span>
@@ -65,43 +72,44 @@ export function ProductCard({
                         src={image}
                         alt={title}
                         fill
-                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                        className={`object-cover transition-transform duration-1000 group-hover:scale-110 ${isOutOfStock ? 'grayscale opacity-80' : ''}`}
                         sizes="(max-width: 768px) 50vw, 25vw"
                     />
                 </Link>
 
                 {/* Hover Quick View (Desktop) */}
-                <div className="absolute inset-0 z-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none md:pointer-events-auto hidden md:flex">
-                    <Link href={`/products/${id}`}>
-                        <Button
-                            className="bg-white/90 backdrop-blur-xl text-slate-900 border-none px-6 py-6 rounded-2xl font-bold shadow-2xl hover:bg-white hover:scale-105 transition-all flex items-center gap-2"
-                        >
-                            <ShoppingCart className="w-4 h-4" />
-                            View Options
-                        </Button>
-                    </Link>
-                </div>
+                {!isOutOfStock && (
+                    <div className="absolute inset-0 z-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none md:pointer-events-auto hidden md:flex">
+                        <Link href={`/products/${id}`}>
+                            <Button
+                                className="bg-white/90 backdrop-blur-xl text-slate-900 border-none px-6 py-6 rounded-2xl font-bold shadow-2xl hover:bg-white hover:scale-105 transition-all flex items-center gap-2"
+                            >
+                                <ShoppingCart className="w-4 h-4" />
+                                View Options
+                            </Button>
+                        </Link>
+                    </div>
+                )}
 
                 {/* Mobile FAB (Permanent) */}
-                <div className="absolute bottom-4 right-4 z-30 md:hidden">
-                    <Link href={`/products/${id}`}>
-                        <button
-                            className="h-12 w-12 rounded-full bg-white shadow-xl flex items-center justify-center active:scale-90 transition-transform text-slate-900 border border-slate-100"
-                        >
-                            <ShoppingBag className="h-6 w-6" />
-                        </button>
-                    </Link>
-                </div>
+                {!isOutOfStock && (
+                    <div className="absolute bottom-4 right-4 z-30 md:hidden">
+                        <Link href={`/products/${id}`}>
+                            <button
+                                className="h-12 w-12 rounded-full bg-white shadow-xl flex items-center justify-center active:scale-90 transition-transform text-slate-900 border border-slate-100"
+                            >
+                                <ShoppingBag className="h-6 w-6" />
+                            </button>
+                        </Link>
+                    </div>
+                )}
             </div>
 
             {/* Content Section */}
             <div className="mt-6 px-4 pb-4">
                 <div className="flex flex-col gap-1.5">
                     <span className="text-[11px] font-bold text-pink-500 uppercase tracking-widest opacity-80">
-                        {/* Show categories joined by dot */}
-                        {[...(category ? [category] : []), ...(id && !category ? [] : [])] /* This is tricky because props are just 'category' string 
-                        {/* Wait, the component receives 'category' prop. I need to update where it is used or passed. */}
-                        {/* {category} */}
+                        {category}
                     </span>
                     <Link href={`/products/${id}`}>
                         <h3 className="text-lg font-bold text-slate-800 tracking-tight leading-snug hover:text-pink-600 transition-colors">

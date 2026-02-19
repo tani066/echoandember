@@ -107,6 +107,7 @@ export default async function ShopPage(props) {
                                 image={product.image || "/image1.jpeg"}
                                 category={product.category}
                                 isNew={Date.now() - new Date(product.createdAt).getTime() < 604800000}
+                                stock={product.stock}
                             />
                         </div>
                     ))}

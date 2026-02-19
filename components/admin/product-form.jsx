@@ -32,7 +32,7 @@ export function ProductForm({ product }) {
         // Normalize values to objects if they are strings (backward compatibility)
         return parsed.map(opt => ({
             ...opt,
-            values: opt.values.map(v => typeof v === 'string' ? { label: v, price: 0 } : v)
+            values: opt.values.map(v => typeof v === 'string' ? { label: v, price: 0, inStock: true } : { ...v, inStock: v.inStock !== false })
         }))
     })
 
@@ -106,7 +106,7 @@ export function ProductForm({ product }) {
 
     const handleAddValue = (optIndex) => {
         const newOptions = [...options]
-        newOptions[optIndex].values.push({ label: "", price: 0 })
+        newOptions[optIndex].values.push({ label: "", price: 0, inStock: true })
         setOptions(newOptions)
     }
 
@@ -252,7 +252,7 @@ export function ProductForm({ product }) {
                                                     value={val.label}
                                                     onChange={(e) => handleValueChange(index, vIndex, 'label', e.target.value)}
                                                 />
-                                                <div className="relative w-32">
+                                                <div className="relative w-24">
                                                     <span className="absolute left-3 top-2.5 text-xs text-muted-foreground">$</span>
                                                     <Input
                                                         type="number"
@@ -262,6 +262,21 @@ export function ProductForm({ product }) {
                                                         onChange={(e) => handleValueChange(index, vIndex, 'price', parseFloat(e.target.value) || 0)}
                                                     />
                                                 </div>
+
+                                                {/* In Stock Toggle */}
+                                                <div className="flex items-center gap-1.5 border px-2 py-2 rounded-md bg-white">
+                                                    <input
+                                                        type="checkbox"
+                                                        id={`stock-${index}-${vIndex}`}
+                                                        checked={val.inStock !== false} // Default true
+                                                        onChange={(e) => handleValueChange(index, vIndex, 'inStock', e.target.checked)}
+                                                        className="w-4 h-4 accent-primary cursor-pointer"
+                                                    />
+                                                    <label htmlFor={`stock-${index}-${vIndex}`} className="text-xs cursor-pointer select-none font-medium text-slate-600">
+                                                        {val.inStock === false ? 'Out' : 'In Stock'}
+                                                    </label>
+                                                </div>
+
                                                 <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveValue(index, vIndex)} className="text-muted-foreground hover:text-red-500">
                                                     <X className="w-4 h-4" />
                                                 </Button>

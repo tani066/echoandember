@@ -43,6 +43,7 @@ export function ProductShowcase({ products }) {
                                 image={product.image || "/image1.jpeg"}
                                 category={product.category}
                                 isNew={Date.now() - new Date(product.createdAt).getTime() < 604800000}
+                                stock={product.stock}
                             />
                         </motion.div>
                     ))}

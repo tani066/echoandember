@@ -99,36 +99,33 @@ export function ProductDetails({ product }) {
     return (
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 mb-12 md:mb-20">
             {/* Gallery Section */}
-            <div className="space-y-4">
+            {/* ✨ The fix: Added min-w-0 and w-full here to prevent horizontal screen stretch on mobile */}
+            <div className="space-y-4 w-full min-w-0">
+
                 {/* Main Media */}
-                <div className="relative w-full bg-slate-50 rounded-3xl overflow-hidden border border-slate-100 flex items-center justify-center">
+                <div className="relative w-full aspect-[4/5] md:aspect-square bg-slate-50 rounded-2xl md:rounded-3xl overflow-hidden border border-slate-100">
                     {activeMedia?.type === 'video' ? (
                         <video
                             src={activeMedia.src}
                             controls
                             autoPlay
-                            /* Change 1: Set height to auto so it respects the video's ratio */
-                            className="w-full h-auto"
+                            className="w-full h-full object-contain"
                         />
                     ) : (
-                        <div className="relative w-full">
-                            {/* Change 2: Next.js Image component adjustment */}
-                            <Image
-                                src={typeof activeMedia === 'string' ? activeMedia : activeMedia?.src || "/image1.jpeg"}
-                                alt={product.title}
-                                /* Remove 'fill' and replace with this setup to respect aspect ratio */
-                                width={0}
-                                height={0}
-                                sizes="100vw"
-                                className="w-full h-auto object-contain transition-transform duration-500 hover:scale-110"
-                            />
-                        </div>
+                        <Image
+                            src={typeof activeMedia === 'string' ? activeMedia : activeMedia?.src || "/image1.jpeg"}
+                            alt={product.title}
+                            fill
+                            priority
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-contain p-2 md:p-0 transition-transform duration-500 md:hover:scale-110"
+                        />
                     )}
                 </div>
 
                 {/* Thumbnails */}
                 {allMedia.length > 1 && (
-                    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide w-full snap-x">
                         {allMedia.map((media, i) => {
                             const isVideo = media?.type === 'video'
                             const src = isVideo ? media.src : media
@@ -139,7 +136,7 @@ export function ProductDetails({ product }) {
                                     key={i}
                                     onClick={() => setSelectedIndex(i)}
                                     className={cn(
-                                        "relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all",
+                                        "relative flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all snap-start",
                                         isSelected ? "border-primary ring-2 ring-primary/20" : "border-transparent opacity-70 hover:opacity-100"
                                     )}
                                 >
@@ -156,7 +153,6 @@ export function ProductDetails({ product }) {
                     </div>
                 )}
             </div>
-
             {/* Info Section */}
             <div className="flex flex-col justify-center space-y-8">
                 <div>
@@ -198,6 +194,12 @@ export function ProductDetails({ product }) {
                     <div className="flex items-center gap-4 mt-4">
                         <span className="text-3xl font-bold text-slate-900">₹{currentPrice.toFixed(2)}</span>
 
+                        {product.stock <= 0 && (
+                            <span className="bg-red-100 text-red-600 text-sm font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                Out of Stock
+                            </span>
+                        )}
+
                         {/* Rating */}
                         <div className="flex items-center gap-1 text-sm bg-yellow-50 px-2 py-1 rounded-md border border-yellow-100">
                             {[1, 2, 3, 4, 5].map(star => (
@@ -224,9 +226,13 @@ export function ProductDetails({ product }) {
                                     {option.values.map((val) => {
                                         const label = typeof val === 'string' ? val : val.label
                                         const isSelected = selectedOptions[option.name] === label
+                                        const isInStock = typeof val === 'object' ? (val.inStock !== false) : true
+
                                         return (
                                             <button
                                                 key={label}
+                                                disabled={!isInStock}
+                                                title={!isInStock ? "Out of Stock" : ""}
                                                 onClick={() => setSelectedOptions(prev => {
                                                     const newOptions = { ...prev }
                                                     if (prev[option.name] === label) {
@@ -237,15 +243,22 @@ export function ProductDetails({ product }) {
                                                     return newOptions
                                                 })}
                                                 className={cn(
-                                                    "px-4 py-2 rounded-lg text-sm font-medium transition-all border-2",
-                                                    isSelected
-                                                        ? "border-primary bg-primary text-white shadow-md transform scale-105"
-                                                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                                                    "px-4 py-2 rounded-lg text-sm font-medium transition-all border-2 relative",
+                                                    !isInStock
+                                                        ? "opacity-50 cursor-not-allowed bg-slate-100 text-slate-400 border-slate-100 decoration-slate-400"
+                                                        : isSelected
+                                                            ? "border-primary bg-primary text-white shadow-md transform scale-105"
+                                                            : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
                                                 )}
                                             >
                                                 {label}
                                                 {typeof val === 'object' && val.price > 0 && (
                                                     <span className="ml-1 text-xs opacity-80">(₹{val.price})</span>
+                                                )}
+                                                {!isInStock && (
+                                                    <span className="absolute inset-0 flex items-center justify-center">
+                                                        <span className="w-full h-0.5 bg-slate-400 rotate-[-12deg]" />
+                                                    </span>
                                                 )}
                                             </button>
                                         )
@@ -258,8 +271,24 @@ export function ProductDetails({ product }) {
 
                 {/* Actions */}
                 <div className="pt-8 flex gap-4">
-                    <Button size="lg" onClick={handleAddToCart} className="flex-1 rounded-full text-lg h-14 shadow-lg shadow-pink-200 gap-2">
-                        <ShoppingCart className="w-5 h-5" /> Add to Cart
+                    <Button
+                        size="lg"
+                        onClick={handleAddToCart}
+                        disabled={product.stock <= 0}
+                        className={cn(
+                            "flex-1 rounded-full text-lg h-14 shadow-lg transition-all gap-2",
+                            product.stock <= 0
+                                ? "bg-slate-200 text-slate-400 shadow-none cursor-not-allowed hover:bg-slate-200"
+                                : "shadow-pink-200"
+                        )}
+                    >
+                        {product.stock <= 0 ? (
+                            "Out of Stock"
+                        ) : (
+                            <>
+                                <ShoppingCart className="w-5 h-5" /> Add to Cart
+                            </>
+                        )}
                     </Button>
                 </div>
             </div>
