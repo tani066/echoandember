@@ -5,7 +5,7 @@ import { FeaturedCategories } from "@/components/featured-categories"
 import { ProductShowcase } from "@/components/product-showcase"
 import { Marquee } from "@/components/marquee"
 import { CustomerReviews } from "@/components/customer-reviews"
-import { getSiteSettings, getCategories } from "@/app/actions"
+import { getSiteSettingsData, getCategoriesData } from "@/lib/data"
 
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -16,8 +16,8 @@ export default async function Home() {
       take: 8,
       orderBy: { createdAt: 'desc' }
     }),
-    getSiteSettings(),
-    getCategories()
+    getSiteSettingsData(),
+    getCategoriesData()
   ])
 
   return (

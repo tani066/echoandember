@@ -5,10 +5,10 @@ import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { ProductForm } from "@/components/admin/product-form"
 
-import { getCategories } from "@/app/actions"
+import { getCategoriesData } from "@/lib/data"
 
 export default async function AddProductPage() {
-    const categories = await getCategories()
+    const categories = await getCategoriesData()
 
     return (
         <div className="space-y-6 max-w-4xl mx-auto">

@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { ProductForm } from "@/components/admin/product-form"
-import { getCategories } from "@/app/actions"
+import { getCategoriesData } from "@/lib/data"
 
 export default async function EditProductPage({ params }) {
     const { id } = await params
     const [product, categories] = await Promise.all([
         prisma.product.findUnique({ where: { id } }),
-        getCategories()
+        getCategoriesData()
     ])
 
     if (!product) {

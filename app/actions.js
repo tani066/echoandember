@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache"
 import { auth } from "@/auth"
 import cloudinary from "@/lib/cloudinary"
 import { redirect } from "next/navigation"
-import { CATEGORIES } from "@/lib/constants"
+import { getCategoriesData, getSiteSettingsData, getUserProfileData } from "@/lib/data"
 
 // --- Product Actions ---
 
@@ -469,13 +469,7 @@ export async function updateUserProfile(formData) {
 // --- Site Settings Actions ---
 
 export async function getSiteSettings() {
-    const settings = await prisma.siteSettings.findFirst()
-    if (!settings) {
-        return await prisma.siteSettings.create({
-            data: {} // Use defaults
-        })
-    }
-    return settings
+    return await getSiteSettingsData()
 }
 
 export async function updateSiteSettings(formData) {
@@ -544,34 +538,13 @@ export async function updateSiteSettings(formData) {
 }
 
 export async function getUserProfile() {
-    const session = await auth()
-    if (!session?.user) return null
-
-    return await prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: { name: true, email: true, phone: true, address: true }
-    })
+    return await getUserProfileData()
 }
 
 // --- Category Actions ---
 
 export async function getCategories() {
-    const count = await prisma.category.count()
-
-    if (count === 0) {
-        console.log("Seeding initial categories...")
-        await prisma.category.createMany({
-            data: CATEGORIES.map(c => ({
-                name: c.name,
-                emoji: c.emoji,
-                color: c.color
-            }))
-        })
-    }
-
-    return await prisma.category.findMany({
-        orderBy: { createdAt: 'asc' }
-    })
+    return await getCategoriesData()
 }
 
 export async function createCategory(name, emoji) {

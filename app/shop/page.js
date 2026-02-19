@@ -3,7 +3,7 @@ import { Navbar } from "@/components/navbar"
 import { ProductCard } from "@/components/product-card"
 import { Search, SlidersHorizontal, ChevronDown, LayoutGrid } from "lucide-react"
 import Link from "next/link"
-import { getCategories } from "@/app/actions"
+import { getCategoriesData } from "@/lib/data"
 
 export default async function ShopPage(props) {
     const searchParams = await props.searchParams
@@ -29,7 +29,7 @@ export default async function ShopPage(props) {
 
     const [products, categories] = await Promise.all([
         prisma.product.findMany({ where, orderBy }),
-        getCategories()
+        getCategoriesData()
     ])
 
     return (
