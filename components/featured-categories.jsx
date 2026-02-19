@@ -2,10 +2,9 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { CATEGORIES } from "@/lib/constants"
 import { ArrowRight } from "lucide-react"
 
-export function FeaturedCategories() {
+export function FeaturedCategories({ categories = [] }) {
     return (
         <section id="shop-categories" className="py-24 bg-white relative overflow-hidden">
             {/* Background Decor */}
@@ -32,7 +31,7 @@ export function FeaturedCategories() {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
-                    {CATEGORIES.map((cat, i) => (
+                    {categories.map((cat, i) => (
                         <CategoryCard key={i} category={cat} index={i} />
                     ))}
                 </div>

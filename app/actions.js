@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache"
 import { auth } from "@/auth"
 import cloudinary from "@/lib/cloudinary"
 import { redirect } from "next/navigation"
+import { CATEGORIES } from "@/lib/constants"
 
 // --- Product Actions ---
 
@@ -551,3 +552,45 @@ export async function getUserProfile() {
         select: { name: true, email: true, phone: true, address: true }
     })
 }
+
+// --- Category Actions ---
+
+export async function getCategories() {
+    const count = await prisma.category.count()
+
+    if (count === 0) {
+        console.log("Seeding initial categories...")
+        await prisma.category.createMany({
+            data: CATEGORIES.map(c => ({
+                name: c.name,
+                emoji: c.emoji,
+                color: c.color
+            }))
+        })
+    }
+
+    return await prisma.category.findMany({
+        orderBy: { createdAt: 'asc' }
+    })
+}
+
+export async function createCategory(name, emoji) {
+    const session = await auth()
+    if (session?.user?.role !== "ADMIN") {
+        throw new Error("Unauthorized")
+    }
+
+    const category = await prisma.category.create({
+        data: {
+            name,
+            emoji
+        }
+    })
+
+    revalidatePath("/")
+    revalidatePath("/shop")
+    revalidatePath("/admin/products/new")
+
+    return category
+}
+

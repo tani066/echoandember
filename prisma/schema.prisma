@@ -124,3 +124,11 @@ model SiteSettings {
   updatedAt             DateTime @updatedAt
 }
 
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  emoji     String?
+  image     String?
+  color     String?
+  createdAt DateTime @default(now())
+}

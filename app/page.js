@@ -5,18 +5,20 @@ import { FeaturedCategories } from "@/components/featured-categories"
 import { ProductShowcase } from "@/components/product-showcase"
 import { Marquee } from "@/components/marquee"
 import { CustomerReviews } from "@/components/customer-reviews"
-import { getSiteSettings } from "@/app/actions"
+import { getSiteSettings, getCategories } from "@/app/actions"
 
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export default async function Home() {
-  const products = await prisma.product.findMany({
-    take: 8,
-    orderBy: { createdAt: 'desc' }
-  })
-
-  const settings = await getSiteSettings()
+  const [products, settings, categories] = await Promise.all([
+    prisma.product.findMany({
+      take: 8,
+      orderBy: { createdAt: 'desc' }
+    }),
+    getSiteSettings(),
+    getCategories()
+  ])
 
   return (
     <main className="min-h-screen bg-[#FDFCFB] font-sans selection:bg-pink-100 selection:text-pink-900">
@@ -40,7 +42,7 @@ export default async function Home() {
         />
       )}
 
-      <FeaturedCategories />
+      <FeaturedCategories categories={categories} />
 
       <ProductShowcase products={products} />
 

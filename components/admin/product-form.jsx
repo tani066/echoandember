@@ -6,17 +6,23 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
-import { Save, Plus, X, Upload, Video, Trash2 } from "lucide-react"
+import { Save, Plus, X, Upload, Video, Trash2, Check } from "lucide-react"
 import Image from "next/image"
-import { addProduct, updateProduct } from "@/app/actions"
+import { addProduct, updateProduct, createCategory } from "@/app/actions"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
-import { CATEGORIES } from "@/lib/constants"
 
-export function ProductForm({ product }) {
+export function ProductForm({ product, availableCategories = [] }) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [selectedCategories, setSelectedCategories] = useState(product?.categories || (product?.category ? [product.category] : []))
+
+    // Category State
+    const [categoriesList, setCategoriesList] = useState(availableCategories)
+    const [isCreatingCat, setIsCreatingCat] = useState(false)
+    const [newCatName, setNewCatName] = useState("")
+    const [newCatEmoji, setNewCatEmoji] = useState("")
+    const [creatingCatLoading, setCreatingCatLoading] = useState(false)
 
     // Files State
     const [imageFiles, setImageFiles] = useState([]) // For new uploads
@@ -24,7 +30,6 @@ export function ProductForm({ product }) {
     const [existingImages, setExistingImages] = useState(product?.images || [])
     const [existingVideos, setExistingVideos] = useState(product?.videos || [])
 
-    // Options State
     // Options State
     const [options, setOptions] = useState(() => {
         if (!product?.options) return []
@@ -36,7 +41,31 @@ export function ProductForm({ product }) {
         }))
     })
 
-    // Handlers for Files
+    async function handleCreateCategory() {
+        if (!newCatName.trim()) {
+            toast.error("Category name is required")
+            return
+        }
+        setCreatingCatLoading(true)
+        try {
+            const newCat = await createCategory(newCatName, newCatEmoji || "✨")
+            setCategoriesList([...categoriesList, newCat])
+            setSelectedCategories([...selectedCategories, newCat.name])
+            setNewCatName("")
+            setNewCatEmoji("")
+            setIsCreatingCat(false)
+            toast.success("Category created and selected")
+        } catch (error) {
+            toast.error("Failed to create category")
+        } finally {
+            setCreatingCatLoading(false)
+        }
+    }
+
+    // ... (rest of file handling logic matches existing) ... 
+
+    // Handlers for Files (Need to keep these as existing code block gets replaced)
+    // Copied from original file to ensure no loss during replacement
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files)
         const validFiles = []
@@ -96,6 +125,8 @@ export function ProductForm({ product }) {
             setExistingVideos(existingVideos.filter((_, i) => i !== index))
         }
     }
+
+    // ...
 
     // Handlers for Options
     const handleAddOption = () => setOptions([...options, { name: "", values: [] }])
@@ -188,9 +219,35 @@ export function ProductForm({ product }) {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <Label>Categories</Label>
+                                <div className="flex items-center justify-between">
+                                    <Label>Categories</Label>
+                                    <Button type="button" variant="ghost" size="sm" onClick={() => setIsCreatingCat(!isCreatingCat)} className="text-xs text-primary">
+                                        {isCreatingCat ? "Cancel" : "+ New Category"}
+                                    </Button>
+                                </div>
+
+                                {isCreatingCat && (
+                                    <div className="flex gap-2 mb-2 p-2 bg-slate-50 rounded-md border">
+                                        <Input
+                                            placeholder="Name"
+                                            value={newCatName}
+                                            onChange={(e) => setNewCatName(e.target.value)}
+                                            className="h-8 text-sm"
+                                        />
+                                        <Input
+                                            placeholder="Emoji"
+                                            value={newCatEmoji}
+                                            onChange={(e) => setNewCatEmoji(e.target.value)}
+                                            className="w-20 h-8 text-sm"
+                                        />
+                                        <Button type="button" size="sm" onClick={handleCreateCategory} disabled={creatingCatLoading}>
+                                            {creatingCatLoading ? "..." : <Check className="w-4 h-4" />}
+                                        </Button>
+                                    </div>
+                                )}
+
                                 <div className="grid grid-cols-2 gap-2 p-4 border rounded-md max-h-[200px] overflow-y-auto">
-                                    {CATEGORIES.map((cat) => (
+                                    {categoriesList.map((cat) => (
                                         <div key={cat.name} className="flex items-center space-x-2">
                                             <input
                                                 type="checkbox"

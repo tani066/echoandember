@@ -3,7 +3,7 @@ import { Navbar } from "@/components/navbar"
 import { ProductCard } from "@/components/product-card"
 import { Search, SlidersHorizontal, ChevronDown, LayoutGrid } from "lucide-react"
 import Link from "next/link"
-import { CATEGORIES } from "@/lib/constants"
+import { getCategories } from "@/app/actions"
 
 export default async function ShopPage(props) {
     const searchParams = await props.searchParams
@@ -27,9 +27,10 @@ export default async function ShopPage(props) {
     if (sort === 'price_asc') orderBy = { price: 'asc' }
     if (sort === 'price_desc') orderBy = { price: 'desc' }
 
-    const products = await prisma.product.findMany({ where, orderBy })
-
-    const categoryNames = CATEGORIES.map(c => c.name)
+    const [products, categories] = await Promise.all([
+        prisma.product.findMany({ where, orderBy }),
+        getCategories()
+    ])
 
     return (
         <main className="min-h-screen bg-[#FDFCFB] text-slate-900 selection:bg-pink-100">
@@ -61,13 +62,13 @@ export default async function ShopPage(props) {
                         >
                             All Treasures
                         </Link>
-                        {categoryNames.map(cat => (
+                        {categories.map(cat => (
                             <Link
-                                key={cat}
-                                href={`/shop?category=${cat}${q ? `&q=${q}` : ''}`}
-                                className={`px-5 py-2 rounded-full text-sm transition-all border whitespace-nowrap active:scale-95 ${category === cat ? 'bg-pink-500 border-pink-500 text-white shadow-md' : 'bg-white border-slate-200 text-slate-600'}`}
+                                key={cat.name}
+                                href={`/shop?category=${cat.name}${q ? `&q=${q}` : ''}`}
+                                className={`px-5 py-2 rounded-full text-sm transition-all border whitespace-nowrap active:scale-95 ${category === cat.name ? 'bg-pink-500 border-pink-500 text-white shadow-md' : 'bg-white border-slate-200 text-slate-600'}`}
                             >
-                                {cat}
+                                {cat.name}
                             </Link>
                         ))}
                     </div>
