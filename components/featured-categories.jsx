@@ -40,7 +40,21 @@ export function FeaturedCategories({ categories = [] }) {
     )
 }
 
+const FALLBACK_COLORS = [
+    'from-pink-100 to-rose-50',
+    'from-purple-100 to-indigo-50',
+    'from-blue-100 to-cyan-50',
+    'from-green-100 to-emerald-50',
+    'from-orange-100 to-amber-50',
+    'from-yellow-100 to-orange-50',
+    'from-red-100 to-pink-50',
+    'from-slate-100 to-blue-50',
+    'from-fuchsia-100 to-pink-50'
+]
+
 function CategoryCard({ category, index }) {
+    const bgGradient = category.color || FALLBACK_COLORS[index % FALLBACK_COLORS.length]
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -53,7 +67,7 @@ function CategoryCard({ category, index }) {
                 className="group relative block h-64 md:h-80 rounded-[2rem] overflow-hidden cursor-pointer"
             >
                 {/* Background & Hover Effect */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${category.color} transition-all duration-700 group-hover:scale-105`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${bgGradient} transition-all duration-700 group-hover:scale-105`} />
 
                 {/* Overlay on hover */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />

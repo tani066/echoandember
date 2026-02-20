@@ -51,7 +51,7 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const [announcement, setAnnouncement] = React.useState("✨ FREE SHIPPING ON ORDERS OVER ₹50 ✨")
+  const [announcement, setAnnouncement] = React.useState("")
 
   React.useEffect(() => {
     getSiteSettings().then(settings => {
