@@ -130,7 +130,7 @@ export function Hero() {
                     >
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-green-500" />
-                            <span className="text-sm font-medium">1000+ Happy Customers</span>
+                            <span className="text-sm font-medium">500+ Happy Customers</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-blue-500" />
@@ -140,14 +140,35 @@ export function Hero() {
                 </div>
 
                 {/* Mobile Hero Image (Static) - Visible only on small screens */}
-                <div className="lg:hidden relative w-full aspect-square max-w-sm mx-auto mt-8">
-                    <div className="absolute inset-0 bg-white rounded-[2rem] shadow-xl overflow-hidden border-4 border-white transform rotate-3">
+                <div className="lg:hidden relative w-full aspect-[4/5] max-w-sm mx-auto mt-8">
+                    <div className="absolute inset-0 bg-white rounded-[2.5rem] shadow-xl overflow-hidden border-4 border-white transform rotate-3 z-10">
                         <Image
                             src="/image2.jpeg"
                             alt="Hero Gift"
                             fill
                             className="object-cover"
                             priority
+                        />
+                    </div>
+                    {/* Floating Badges for Mobile */}
+                    <div className="absolute inset-0 z-20 pointer-events-none">
+                        <FloatingBadge
+                            icon={<Camera className="w-4 h-4 text-pink-500" />}
+                            text="Polaroids"
+                            className="-top-4 -left-2 scale-90 origin-top-left pointer-events-auto"
+                            delay={0.5}
+                        />
+                        <FloatingBadge
+                            icon={<Music className="w-4 h-4 text-purple-500" />}
+                            text="Spotify Plaques"
+                            className="bottom-12 -right-4 md:bottom-20 md:-right-8 scale-90 origin-bottom-right pointer-events-auto"
+                            delay={0.7}
+                        />
+                        <FloatingBadge
+                            icon={<Gift className="w-4 h-4 text-yellow-500" />}
+                            text="Miniatures"
+                            className="-bottom-4 -left-2 md:bottom-4 md:-left-6 scale-90 origin-bottom-left pointer-events-auto"
+                            delay={0.9}
                         />
                     </div>
                 </div>
