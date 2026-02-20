@@ -1,9 +1,10 @@
 import { prisma } from "@/lib/prisma"
 import { Navbar } from "@/components/navbar"
 import { ProductCard } from "@/components/product-card"
-import { Search, SlidersHorizontal, ChevronDown, LayoutGrid } from "lucide-react"
+import { Search, SlidersHorizontal, LayoutGrid } from "lucide-react"
 import Link from "next/link"
 import { getCategoriesData } from "@/lib/data"
+import { SortDropdown } from "@/components/sort-dropdown"
 
 export default async function ShopPage(props) {
     const searchParams = await props.searchParams
@@ -80,19 +81,9 @@ export default async function ShopPage(props) {
                             <span>{products.length} Items</span>
                         </div>
 
-                        {/* Sort - Large touch target for mobile */}
+                        {/* Sort - Native Select Client Component */}
                         <div className="relative group">
-                            <button className="flex items-center gap-2 text-sm font-medium bg-slate-50 px-4 py-2 rounded-lg border border-slate-100">
-                                <span>Sort</span>
-                                <ChevronDown size={14} className="group-hover:rotate-180 transition-transform" />
-                            </button>
-
-                            {/* Dropdown Menu */}
-                            <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-100 shadow-xl rounded-xl py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all md:block hidden">
-                                <Link href={`/shop?${new URLSearchParams({ ...searchParams, sort: 'newest' })}`} className="block px-4 py-2 text-sm hover:bg-slate-50">Newest</Link>
-                                <Link href={`/shop?${new URLSearchParams({ ...searchParams, sort: 'price_asc' })}`} className="block px-4 py-2 text-sm hover:bg-slate-50">Price: Low to High</Link>
-                                <Link href={`/shop?${new URLSearchParams({ ...searchParams, sort: 'price_desc' })}`} className="block px-4 py-2 text-sm hover:bg-slate-50">Price: High to Low</Link>
-                            </div>
+                            <SortDropdown sort={sort} q={q} category={category} />
                         </div>
                     </div>
                 </div>
