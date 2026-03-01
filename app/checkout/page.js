@@ -230,6 +230,11 @@ export default function CheckoutPage() {
                 <span>Total</span>
                 <span>₹{grandTotal.toFixed(2)}</span>
               </div>
+
+              <div className="bg-pink-50 text-pink-700 text-sm p-3 rounded-md flex items-center justify-center gap-2 mt-4 font-medium border border-pink-100">
+                {/* <Sparkles className="w-4 h-4" /> */}
+                Enjoy a free gift on every purchase! 🎁
+              </div>
             </CardContent>
 
             <CardFooter>
